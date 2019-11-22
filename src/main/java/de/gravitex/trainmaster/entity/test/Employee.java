@@ -1,4 +1,4 @@
-package de.gravitex.trainmaster.entity;
+package de.gravitex.trainmaster.entity.test;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
