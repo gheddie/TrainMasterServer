@@ -2,7 +2,7 @@ package de.gravitex.trainmaster.helper;
 
 import de.gravitex.trainmaster.entity.RailItem;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
-import de.gravitex.trainmaster.entity.RailtItemSequence;
+import de.gravitex.trainmaster.entity.RailItemSequence;
 import lombok.Data;
 
 @Data
@@ -15,8 +15,8 @@ public class RailItemSequenceBuilder {
 		return this;
 	}
 
-	public RailtItemSequence build() {
-		RailtItemSequence result = new RailtItemSequence();
+	public RailItemSequence build() {
+		RailItemSequence result = new RailItemSequence();
 		RailItemSequenceMembership membership = null;
 		for (RailItem railItem : railItems) {
 			membership = new RailItemSequenceMembership();

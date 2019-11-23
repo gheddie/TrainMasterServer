@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import de.gravitex.trainmaster.entity.Locomotive;
-import de.gravitex.trainmaster.entity.RailtItemSequence;
+import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.StationInfo;
 import de.gravitex.trainmaster.entity.Track;
@@ -25,14 +25,14 @@ public class TrainRunTest {
 	@Test
 	public void testTrainRunWithWaggonsAndLocomotivesWithTrainRunner() {
 		
-		RailtItemSequence waggonSequenceAForExit = new RailItemSequenceBuilder()
+		RailItemSequence waggonSequenceAForExit = new RailItemSequenceBuilder()
 				.withRailItems(new Waggon("WAG1"), new Waggon("WAG2"), new Waggon("WAG3")).build();
 		assertEquals("WAG1@0#WAG2@1#WAG3@2", WaggonManager.getWaggonNumbersAsString(waggonSequenceAForExit));
 
-		RailtItemSequence waggonSequenceBForExit = new RailItemSequenceBuilder().withRailItems(new Waggon("WAG4"), new Waggon("WAG5")).build();
+		RailItemSequence waggonSequenceBForExit = new RailItemSequenceBuilder().withRailItems(new Waggon("WAG4"), new Waggon("WAG5")).build();
 		assertEquals("WAG4@0#WAG5@1", WaggonManager.getWaggonNumbersAsString(waggonSequenceBForExit));
 
-		RailtItemSequence locomotiveSequence = new RailItemSequenceBuilder().withRailItems(new Locomotive("LOCO1"), new Locomotive("LOCO2")).build();
+		RailItemSequence locomotiveSequence = new RailItemSequenceBuilder().withRailItems(new Locomotive("LOCO1"), new Locomotive("LOCO2")).build();
 
 		// set up station A with waggons
 		Track trackExitS1 = new Track("TExitS1");
@@ -50,14 +50,14 @@ public class TrainRunTest {
 	@Test
 	public void testTrainRunWithWaggonsAndLocomotives() {
 
-		RailtItemSequence waggonSequenceAForExit = new RailItemSequenceBuilder()
+		RailItemSequence waggonSequenceAForExit = new RailItemSequenceBuilder()
 				.withRailItems(new Waggon("WAG1"), new Waggon("WAG2"), new Waggon("WAG3")).build();
 		assertEquals("WAG1@0#WAG2@1#WAG3@2", WaggonManager.getWaggonNumbersAsString(waggonSequenceAForExit));
 
-		RailtItemSequence waggonSequenceBForExit = new RailItemSequenceBuilder().withRailItems(new Waggon("WAG4"), new Waggon("WAG5")).build();
+		RailItemSequence waggonSequenceBForExit = new RailItemSequenceBuilder().withRailItems(new Waggon("WAG4"), new Waggon("WAG5")).build();
 		assertEquals("WAG4@0#WAG5@1", WaggonManager.getWaggonNumbersAsString(waggonSequenceBForExit));
 
-		RailtItemSequence locomotiveSequence = new RailItemSequenceBuilder().withRailItems(new Locomotive("LOCO1"), new Locomotive("LOCO2")).build();
+		RailItemSequence locomotiveSequence = new RailItemSequenceBuilder().withRailItems(new Locomotive("LOCO1"), new Locomotive("LOCO2")).build();
 
 		// set up station A with waggons
 		Track trackExitS1 = new Track("TExitS1");
@@ -99,7 +99,7 @@ public class TrainRunTest {
 				new StationInfo(new Station("S3"), new Track("TEntryS3"), exitTrackS3));
 		train.setTrainRun(trainRun);
 
-		RailtItemSequence locomotiveSequence = new RailItemSequenceBuilder().withRailItems(new Locomotive("LOCO1"), new Locomotive("LOCO2")).build();
+		RailItemSequence locomotiveSequence = new RailItemSequenceBuilder().withRailItems(new Locomotive("LOCO1"), new Locomotive("LOCO2")).build();
 
 		TrackManager.populateTrack(exitTrackS1, locomotiveSequence);
 

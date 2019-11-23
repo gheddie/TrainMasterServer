@@ -13,7 +13,7 @@ public class RailItemSequenceMembership extends BaseEntity {
 	private RailItem railItem;
 	
 	@OneToOne
-	private RailtItemSequence railtItemSequence;
+	private RailItemSequence railtItemSequence;
 	
 	private int ordinalPosition;
 	

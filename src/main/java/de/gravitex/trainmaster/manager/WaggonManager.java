@@ -5,14 +5,14 @@ import java.util.List;
 
 import de.gravitex.trainmaster.entity.RailItem;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
-import de.gravitex.trainmaster.entity.RailtItemSequence;
+import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.helper.StringHelper;
 
 public class WaggonManager {
 
-	public static RailtItemSequence addWaggonToSequence(RailtItemSequence railtItemSequence, RailItem... railItems) {
+	public static RailItemSequence addWaggonToSequence(RailItemSequence railtItemSequence, RailItem... railItems) {
 		if (railtItemSequence == null) {
-			railtItemSequence = new RailtItemSequence();
+			railtItemSequence = new RailItemSequence();
 		}
 		for (RailItem railItem : railItems) {
 			RailItemSequenceMembership railItemSequenceMembership = new RailItemSequenceMembership();
@@ -22,7 +22,7 @@ public class WaggonManager {
 		return railtItemSequence;
 	}
 
-	public static String getWaggonNumbersAsString(RailtItemSequence railtItemSequence) {
+	public static String getWaggonNumbersAsString(RailItemSequence railtItemSequence) {
 		List<String> waggonNumbers = new ArrayList<>();
 		for (RailItemSequenceMembership membership : railtItemSequence.getRailItemSequenceMemberships()) {
 			waggonNumbers.add(membership.getRailItem().getIdentifier());
@@ -30,8 +30,8 @@ public class WaggonManager {
 		return StringHelper.stringListAsOrderedAndSeparated(waggonNumbers);
 	}
 
-	public static RailtItemSequence reverseWaggonSequence(RailtItemSequence railtItemSequence) {
-		RailtItemSequence reversedSequence = new RailtItemSequence();
+	public static RailItemSequence reverseWaggonSequence(RailItemSequence railtItemSequence) {
+		RailItemSequence reversedSequence = new RailItemSequence();
 		int removeIndex = railtItemSequence.getRailItemSequenceMemberships().size() - 1;
 		for (int counter = 0; counter < railtItemSequence.getRailItemSequenceMemberships().size(); counter++) {
 			RailItemSequenceMembership membership = railtItemSequence.getRailItemSequenceMemberships().get(removeIndex);

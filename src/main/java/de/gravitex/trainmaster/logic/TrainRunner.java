@@ -1,6 +1,6 @@
 package de.gravitex.trainmaster.logic;
 
-import de.gravitex.trainmaster.entity.RailtItemSequence;
+import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.StationInfo;
 import de.gravitex.trainmaster.entity.Track;
@@ -14,7 +14,7 @@ public class TrainRunner {
 
 	private Track entryTrack;
 
-	public void runTrain(Track exitTrack, RailtItemSequence locomotiveSequence, RailtItemSequence waggonSequenceForExit, Track aEntryTrack) {
+	public void runTrain(Track exitTrack, RailItemSequence locomotiveSequence, RailItemSequence waggonSequenceForExit, Track aEntryTrack) {
 		
 		Train train = new Train();
 		train.setWaggonSequence(waggonSequenceForExit);

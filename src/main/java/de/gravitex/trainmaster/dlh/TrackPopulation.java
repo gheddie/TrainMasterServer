@@ -2,7 +2,7 @@ package de.gravitex.trainmaster.dlh;
 
 import java.util.List;
 
-import de.gravitex.trainmaster.entity.RailtItemSequence;
+import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Track;
 import lombok.Data;
 
@@ -11,11 +11,11 @@ public class TrackPopulation {
 
 	private Track track;
 	
-	private RailtItemSequence locomotiveSequence;
+	private RailItemSequence locomotiveSequence;
 	
-	private List<RailtItemSequence> waggonSequences;
+	private List<RailItemSequence> waggonSequences;
 
-	public TrackPopulation(Track track, RailtItemSequence locomotiveSequence, List<RailtItemSequence> waggonSequences) {
+	public TrackPopulation(Track track, RailItemSequence locomotiveSequence, List<RailItemSequence> waggonSequences) {
 		super();
 		this.track = track;
 		this.locomotiveSequence = locomotiveSequence;

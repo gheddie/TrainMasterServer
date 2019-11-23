@@ -1,9 +1,11 @@
 package de.gravitex.trainmaster.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 
 import lombok.Data;
 
+@Entity
 @Data
 public class Locomotive extends RailItem {
 	

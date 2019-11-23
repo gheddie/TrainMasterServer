@@ -24,7 +24,7 @@ public class Track extends RailtItemSequenceHolder {
 	private String name;
 	
 	@OneToMany
-	private List<RailtItemSequence> railItemSequences = new ArrayList<>();
+	private List<RailItemSequence> railItemSequences = new ArrayList<>();
 	
 	public Track(String name) {
 		super();

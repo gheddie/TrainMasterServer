@@ -10,10 +10,10 @@ import lombok.Data;
 public class Train extends RailtItemSequenceHolder {
 	
 	@OneToOne
-	public RailtItemSequence locomotives;
+	public RailItemSequence locomotives;
 
 	@OneToOne
-	public RailtItemSequence waggonSequence;
+	public RailItemSequence waggonSequence;
 	
 	@OneToOne
 	public TrainRun trainRun;

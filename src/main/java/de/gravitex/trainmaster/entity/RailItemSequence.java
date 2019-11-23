@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class RailtItemSequence extends BaseEntity {
+public class RailItemSequence extends BaseEntity {
 	
 	@OneToOne
 	private RailtItemSequenceHolder railtItemSequenceHolder;

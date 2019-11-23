@@ -6,7 +6,7 @@ import java.util.List;
 
 import de.gravitex.trainmaster.checker.OverweightTrainChecker;
 import de.gravitex.trainmaster.checker.TrainChecker;
-import de.gravitex.trainmaster.entity.RailtItemSequence;
+import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
@@ -55,7 +55,7 @@ public class TrainRunManager {
 		return train;
 	}
 
-	public static Train prepareTrain(Train train, RailtItemSequence locomotiveSequence, RailtItemSequence... waggonSequences) throws TrainRunException {
+	public static Train prepareTrain(Train train, RailItemSequence locomotiveSequence, RailItemSequence... waggonSequences) throws TrainRunException {
 
 		if (train.getTrainRun() == null) {
 			throw new TrainRunException("train must have a train run set!!");
@@ -66,14 +66,14 @@ public class TrainRunManager {
 		if (locomotiveSequence != null) {
 			railItemTrack = (Track) locomotiveSequence.getRailtItemSequenceHolder();
 			if (railItemTrack == null) {
-				throw new TrainRunException("locos without a track detected!!");
+				throw new TrainRunException("loco sequence without a track detected!!");
 			}
 			trackSet.add(railItemTrack);
 		}
-		for (RailtItemSequence railtItemSequence : waggonSequences) {
+		for (RailItemSequence railtItemSequence : waggonSequences) {
 			railItemTrack = (Track) railtItemSequence.getRailtItemSequenceHolder();
 			if (railItemTrack == null) {
-				throw new TrainRunException("waggons without a track detected!!");
+				throw new TrainRunException("waggon sequence without a track detected!!");
 			}
 			trackSet.add(railItemTrack);
 		}
@@ -88,7 +88,7 @@ public class TrainRunManager {
 			locomotiveSequence.setRailtItemSequenceHolder(train);
 		}
 		// switch waggon sequences to the train!!
-		for (RailtItemSequence railtItemSequence : waggonSequences) {
+		for (RailItemSequence railtItemSequence : waggonSequences) {
 			railtItemSequence.setRailtItemSequenceHolder(train);
 		}
 		train.getTrainRun().setTrainRunState(TrainRunState.PREPARED);

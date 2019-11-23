@@ -8,12 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import de.gravitex.trainmaster.entity.Locomotive;
 import de.gravitex.trainmaster.entity.RailItem;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
-import de.gravitex.trainmaster.entity.RailtItemSequence;
+import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Waggon;
+import de.gravitex.trainmaster.helper.RailItemSequenceBuilder;
+import de.gravitex.trainmaster.logic.TrainRunner;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailtItemSequenceMembershipRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
@@ -48,6 +51,9 @@ public class TrainMasterDatabaseTest {
 		Station station2 = new Station("S2");
 		stationRepository.save(station2);
 
+		Locomotive locomotive1 = new Locomotive("L1");
+		railItemRepository.save(locomotive1);
+
 		Waggon waggon123 = new Waggon("123");
 		railItemRepository.save(waggon123);
 
@@ -75,39 +81,53 @@ public class TrainMasterDatabaseTest {
 		track1Station2.setStation(station2);
 		trackRepository.save(track1Station2);
 
-		putWaggonToTrack(waggon123, track1Station1);
-		putWaggonToTrack(waggon234, track1Station1);
-		putWaggonToTrack(waggon345, track2Station1);
-		putWaggonToTrack(waggon456, track1Station2);
-		putWaggonToTrack(waggon567, track1Station2);
+		RailItemSequence seqLocos = new RailItemSequence();
+		RailItemSequence seqTrack1Station1 = new RailItemSequence();
+		RailItemSequence seqTrack2Station1 = new RailItemSequence();
+		RailItemSequence seqTrack1Station2 = new RailItemSequence();
+
+		putRailItemToTrack(locomotive1, track1Station1, seqLocos);
+		putRailItemToTrack(waggon123, track1Station1, seqTrack1Station1);
+		putRailItemToTrack(waggon234, track1Station1, seqTrack1Station1);
+		putRailItemToTrack(waggon345, track2Station1, seqTrack2Station1);
+		putRailItemToTrack(waggon456, track1Station2, seqTrack1Station2);
+		putRailItemToTrack(waggon567, track1Station2, seqTrack1Station2);
 
 		List<Station> allStations = stationRepository.findAll();
 		assertEquals(2, allStations.size());
 
 		assertEquals(3, trackRepository.findAll().size());
-
+		
 		SimpleTrackRenderer simpleTrackRenderer = new SimpleTrackRenderer();
 
+		renderTracksAndWaggons(simpleTrackRenderer);
+
+		// TODO run train
+		new TrainRunner().runTrain(track1Station1, seqLocos,
+				seqTrack1Station1, track1Station2);
+
+		renderTracksAndWaggons(simpleTrackRenderer);
+	}
+
+	private void renderTracksAndWaggons(SimpleTrackRenderer simpleTrackRenderer) {
 		List<RailItem> railItems = null;
 		for (Track t : trackRepository.findAll()) {
 			railItems = railItemRepository.findByTrack(t);
 			simpleTrackRenderer.putTrackWaggons(t, railItems);
 		}
-
 		simpleTrackRenderer.render();
 	}
 
-	private void putWaggonToTrack(Waggon waggon, Track track) {
+	private void putRailItemToTrack(RailItem railItem, Track track, RailItemSequence railtItemSequence) {
 
-		System.out.println("putWaggonToTrack :: waggon = " + waggon.getWaggonNumber() + ", track = " + track.getName()
+		System.out.println("putWaggonToTrack :: waggon = " + railItem.getIdentifier() + ", track = " + track.getName()
 				+ ", station = " + track.getStation().getStationName());
 
-		RailtItemSequence railtItemSequence = new RailtItemSequence();
 		railtItemSequence.setRailtItemSequenceHolder(track);
 		railItemSequenceRepository.save(railtItemSequence);
 
 		RailItemSequenceMembership sequenceMembership = new RailItemSequenceMembership();
-		sequenceMembership.setRailItem(waggon);
+		sequenceMembership.setRailItem(railItem);
 		sequenceMembership.setRailtItemSequence(railtItemSequence);
 		railtItemSequenceMembershipRepository.save(sequenceMembership);
 	}
