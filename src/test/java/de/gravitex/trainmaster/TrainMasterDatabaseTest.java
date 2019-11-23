@@ -45,37 +45,39 @@ public class TrainMasterDatabaseTest {
     	Station station = new Station("S1");
 		stationRepository.save(station);
 
-		Waggon waggon = new Waggon("123");
-		railItemRepository.save(waggon);
+		Waggon waggon123 = new Waggon("123");
+		railItemRepository.save(waggon123);
 		
-    	Track track = new Track("123");
-    	track.setStation(station);
-		trackRepository.save(track);
+		Waggon waggon234 = new Waggon("234");
+		railItemRepository.save(waggon234);
+		
+		Waggon waggon345 = new Waggon("345");
+		railItemRepository.save(waggon345);
+		
+    	Track trackA = new Track("A");
+    	trackA.setStation(station);
+		trackRepository.save(trackA);
+		
+    	Track trackB = new Track("B");
+    	trackB.setStation(station);
+		trackRepository.save(trackB);
 
-		RailtItemSequence railtItemSequence = new RailtItemSequence();
-		railtItemSequence.setRailtItemSequenceHolder(track);
-		railItemSequenceRepository.save(railtItemSequence);
-
-		RailItemSequenceMembership sequenceMembership = new RailItemSequenceMembership();
-		sequenceMembership.setRailItem(waggon);
-		sequenceMembership.setRailtItemSequence(railtItemSequence);
-		railtItemSequenceMembershipRepository.save(sequenceMembership);
+		putWaggonToTrack(waggon123, trackA);
+		putWaggonToTrack(waggon234, trackA);
+		putWaggonToTrack(waggon345, trackB);
     	
     	List<Track> allTracks = trackRepository.findAll();
 		
 		List<Track> findAll = allTracks;
-		assertEquals(1, findAll.size());
-		
-		List<RailItemSequenceMembership> risms = railtItemSequenceMembershipRepository.findAll();
-		List<RailtItemSequence> seqs = railItemSequenceRepository.findAll();
+		assertEquals(2, findAll.size());
 		
 		SimpleTrackRenderer simpleTrackRenderer = new SimpleTrackRenderer(allTracks);
 		List<RailItem> railItems = null;
 		for (Track t : allTracks) {
-			railItems = railItemRepository.findByTrack(track);
-			simpleTrackRenderer.putTrackWaggons(track, railItems);
-			int werner = 5;
+			railItems = railItemRepository.findByTrack(t);
+			simpleTrackRenderer.putTrackWaggons(t, railItems);
 		}
+		
 		simpleTrackRenderer.render();
 		
 		/*
@@ -104,4 +106,16 @@ public class TrainMasterDatabaseTest {
 		}
 		*/
     }
+
+	private void putWaggonToTrack(Waggon waggon, Track track) {
+		
+		RailtItemSequence railtItemSequence = new RailtItemSequence();
+		railtItemSequence.setRailtItemSequenceHolder(track);
+		railItemSequenceRepository.save(railtItemSequence);
+
+		RailItemSequenceMembership sequenceMembership = new RailItemSequenceMembership();
+		sequenceMembership.setRailItem(waggon);
+		sequenceMembership.setRailtItemSequence(railtItemSequence);
+		railtItemSequenceMembershipRepository.save(sequenceMembership);
+	}
 }
