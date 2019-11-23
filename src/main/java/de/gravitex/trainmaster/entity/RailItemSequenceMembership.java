@@ -9,11 +9,6 @@ import lombok.Data;
 @Data
 public class RailItemSequenceMembership extends BaseEntity {
 
-	public RailItemSequenceMembership(RailItem railItem) {
-		super();
-		this.railItem = railItem;
-	}
-
 	@OneToOne
 	private RailItem railItem;
 	

@@ -19,7 +19,8 @@ public class RailItemSequenceBuilder {
 		RailtItemSequence result = new RailtItemSequence();
 		RailItemSequenceMembership membership = null;
 		for (RailItem railItem : railItems) {
-			membership = new RailItemSequenceMembership(railItem.asConcreteItem());
+			membership = new RailItemSequenceMembership();
+			membership.setRailItem(railItem.asConcreteItem());
 			result.getRailItemSequenceMemberships().add(membership);
 		}
 		return result;
