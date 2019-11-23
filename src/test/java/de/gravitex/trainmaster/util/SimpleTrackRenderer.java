@@ -11,39 +11,43 @@ import lombok.Data;
 @Data
 public class SimpleTrackRenderer {
 
-	private List<Track> tracks;
-	
-	private HashMap<Station, Moo> moos;
-
-	private HashMap<Track, List<RailItem>> railItemsByTrack = new HashMap<Track, List<RailItem>>();
-
-	public SimpleTrackRenderer(List<Track> aTracks) {
-		this.tracks = aTracks;
-	}
+	private HashMap<Station, StationsAndTracksAndWaggons> stationsAndTracksAndWaggons = new HashMap<Station, SimpleTrackRenderer.StationsAndTracksAndWaggons>();
 
 	public void render() {
 		System.out.println("---------------------------------------------");
-		List<RailItem> itemsByTrack = null;
-		for (Track t : tracks) {
-			itemsByTrack = railItemsByTrack.get(t);
-			if (itemsByTrack != null) {
-				String itemString = "";
-				for (RailItem item : itemsByTrack) {
-					itemString += "[" + item.getIdentifier() + "]";
+
+		StationsAndTracksAndWaggons sataw = null;
+		for (Station station : stationsAndTracksAndWaggons.keySet()) {
+			System.out.println("[@@@ STATION :: "+station.getStationName()+" @@@]");
+			sataw = stationsAndTracksAndWaggons.get(station);
+			List<RailItem> itemsByTrack = null;
+			for (Track t : sataw.getRailItemsByTrack().keySet()) {
+				itemsByTrack = sataw.getRailItemsByTrack().get(t);
+				if (itemsByTrack != null) {
+					String itemString = "";
+					for (RailItem item : itemsByTrack) {
+						itemString += "[" + item.getIdentifier() + "]";
+					}
+					System.out.println("[" + t.getName() + "] --> " + itemString);
 				}
-				System.out.println("[" + t.getName() + "] --> " + itemString);
 			}
 		}
+
 		System.out.println("---------------------------------------------");
 	}
 
 	public void putTrackWaggons(Track track, List<RailItem> railItems) {
-		railItemsByTrack.put(track, railItems);
+		if (stationsAndTracksAndWaggons.get(track.getStation()) == null) {
+			stationsAndTracksAndWaggons.put(track.getStation(), new StationsAndTracksAndWaggons());	
+		}
+		stationsAndTracksAndWaggons.get(track.getStation()).getRailItemsByTrack().put(track, railItems);
 	}
-	
+
 	// ---
-	
-	private class Moo {
-		
+
+	@Data
+	private class StationsAndTracksAndWaggons {
+
+		private HashMap<Track, List<RailItem>> railItemsByTrack = new HashMap<Track, List<RailItem>>();
 	}
 }

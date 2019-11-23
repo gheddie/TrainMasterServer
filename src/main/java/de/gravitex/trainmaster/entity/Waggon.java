@@ -1,5 +1,6 @@
 package de.gravitex.trainmaster.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import lombok.Data;
@@ -12,7 +13,8 @@ public class Waggon extends RailItem {
 		super();
 		this.waggonNumber = aWaggonNumber;
 	}
-
+	
+	@Column(unique = true)
 	private String waggonNumber;
 
 	@Override

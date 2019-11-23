@@ -24,91 +24,84 @@ import de.gravitex.trainmaster.util.SimpleTrackRenderer;
 @DataJpaTest
 public class TrainMasterDatabaseTest {
 
-    @Autowired
-    private StationRepository stationRepository;
-    
-    @Autowired
-    private TrackRepository trackRepository;
-    
-    @Autowired
-    private RailItemSequenceRepository railItemSequenceRepository;
-    
-    @Autowired
-    private RailtItemSequenceMembershipRepository railtItemSequenceMembershipRepository;
-    
-    @Autowired
-    private RailItemRepository railItemRepository;
+	@Autowired
+	private StationRepository stationRepository;
 
-    @Test
-    public void testTrainRunner() throws Exception {
-    	
-    	Station station = new Station("S1");
-		stationRepository.save(station);
+	@Autowired
+	private TrackRepository trackRepository;
+
+	@Autowired
+	private RailItemSequenceRepository railItemSequenceRepository;
+
+	@Autowired
+	private RailtItemSequenceMembershipRepository railtItemSequenceMembershipRepository;
+
+	@Autowired
+	private RailItemRepository railItemRepository;
+
+	@Test
+	public void testTrainRunner() throws Exception {
+
+		Station station1 = new Station("S1");
+		stationRepository.save(station1);
+
+		Station station2 = new Station("S2");
+		stationRepository.save(station2);
 
 		Waggon waggon123 = new Waggon("123");
 		railItemRepository.save(waggon123);
-		
+
 		Waggon waggon234 = new Waggon("234");
 		railItemRepository.save(waggon234);
-		
+
 		Waggon waggon345 = new Waggon("345");
 		railItemRepository.save(waggon345);
-		
-    	Track trackA = new Track("A");
-    	trackA.setStation(station);
-		trackRepository.save(trackA);
-		
-    	Track trackB = new Track("B");
-    	trackB.setStation(station);
-		trackRepository.save(trackB);
 
-		putWaggonToTrack(waggon123, trackA);
-		putWaggonToTrack(waggon234, trackA);
-		putWaggonToTrack(waggon345, trackB);
-    	
-    	List<Track> allTracks = trackRepository.findAll();
-		
-		List<Track> findAll = allTracks;
-		assertEquals(2, findAll.size());
-		
-		SimpleTrackRenderer simpleTrackRenderer = new SimpleTrackRenderer(allTracks);
+		Waggon waggon456 = new Waggon("456");
+		railItemRepository.save(waggon456);
+
+		Waggon waggon567 = new Waggon("567");
+		railItemRepository.save(waggon567);
+
+		Track track1Station1 = new Track("track1Station1");
+		track1Station1.setStation(station1);
+		trackRepository.save(track1Station1);
+
+		Track track2Station1 = new Track("track2Station1");
+		track2Station1.setStation(station1);
+		trackRepository.save(track2Station1);
+
+		Track track1Station2 = new Track("track1Station2");
+		track1Station2.setStation(station2);
+		trackRepository.save(track1Station2);
+
+		putWaggonToTrack(waggon123, track1Station1);
+		putWaggonToTrack(waggon234, track1Station1);
+		putWaggonToTrack(waggon345, track2Station1);
+		putWaggonToTrack(waggon456, track1Station2);
+		putWaggonToTrack(waggon567, track1Station2);
+
+		List<Station> allStations = stationRepository.findAll();
+		assertEquals(2, allStations.size());
+
+		assertEquals(3, trackRepository.findAll().size());
+
+		SimpleTrackRenderer simpleTrackRenderer = new SimpleTrackRenderer();
+
 		List<RailItem> railItems = null;
-		for (Track t : allTracks) {
+		for (Track t : trackRepository.findAll()) {
 			railItems = railItemRepository.findByTrack(t);
 			simpleTrackRenderer.putTrackWaggons(t, railItems);
 		}
-		
+
 		simpleTrackRenderer.render();
-		
-		/*
-		RailtItemSequence waggonSequenceAForExit = new RailItemSequenceBuilder()
-				.withRailItems(new Waggon("WAG1"), new Waggon("WAG2"), new Waggon("WAG3")).build();
-		assertEquals("WAG1@0#WAG2@1#WAG3@2", WaggonManager.getWaggonNumbersAsString(waggonSequenceAForExit));
-
-		RailtItemSequence waggonSequenceBForExit = new RailItemSequenceBuilder().withRailItems(new Waggon("WAG4"), new Waggon("WAG5")).build();
-		assertEquals("WAG4@0#WAG5@1", WaggonManager.getWaggonNumbersAsString(waggonSequenceBForExit));
-
-		RailtItemSequence locomotiveSequence = new RailItemSequenceBuilder().withRailItems(new Locomotive("LOCO1"), new Locomotive("LOCO2")).build();
-
-		// set up station A with waggons
-		Track trackExitS1 = new Track("TExitS1");
-		TrackPopulation trackPopulation = TrackManager.populateTrack(trackExitS1, locomotiveSequence, waggonSequenceAForExit, waggonSequenceBForExit);
-		
-		// save memberships
-		for (RailtItemSequence waggonSequence : trackPopulation.getWaggonSequences()) {
-			for (RailItemSequenceMembership membership : waggonSequence.getRailItemSequenceMemberships()) {
-				railItemRepository.save(membership.getRailItem());
-				waggonSequence.setRailtItemSequenceHolder(trackExitS1);
-				railtItemSequenceRepository.save(waggonSequence);
-				membership.setRailtItemSequence(waggonSequence);
-				railtItemSequenceMembershipRepository.save(membership);				
-			}
-		}
-		*/
-    }
+	}
 
 	private void putWaggonToTrack(Waggon waggon, Track track) {
-		
+
+		System.out.println("putWaggonToTrack :: waggon = " + waggon.getWaggonNumber() + ", track = " + track.getName()
+				+ ", station = " + track.getStation().getStationName());
+
 		RailtItemSequence railtItemSequence = new RailtItemSequence();
 		railtItemSequence.setRailtItemSequenceHolder(track);
 		railItemSequenceRepository.save(railtItemSequence);

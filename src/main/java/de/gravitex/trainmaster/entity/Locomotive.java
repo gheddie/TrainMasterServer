@@ -1,10 +1,13 @@
 package de.gravitex.trainmaster.entity;
 
+import javax.persistence.Column;
+
 import lombok.Data;
 
 @Data
 public class Locomotive extends RailItem {
 	
+	@Column(unique = true)
 	private String locoNumber;
 
 	@Override
