@@ -1,0 +1,22 @@
+@startuml
+
+abstract class BaseEntity
+
+class RailtItemSequence extends BaseEntity
+abstract class RailtItemSequenceHolder extends BaseEntity
+class Station extends BaseEntity
+class StationInfo extends BaseEntity
+class Track extends RailtItemSequenceHolder
+class Train extends RailtItemSequenceHolder
+class TrainRun extends BaseEntity
+class TrainRunSection extends BaseEntity
+class Waggon extends RailItem
+class Locomotive extends RailItem
+abstract class RailItem extends BaseEntity
+class RailItemSequenceMembership extends BaseEntity
+
+'---
+
+Station "1" -- "n" Track
+
+@enduml
