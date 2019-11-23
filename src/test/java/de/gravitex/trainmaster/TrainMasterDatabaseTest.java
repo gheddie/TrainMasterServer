@@ -8,21 +8,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import de.gravitex.trainmaster.entity.Locomotive;
+import de.gravitex.trainmaster.entity.RailItem;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.RailtItemSequence;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Waggon;
-import de.gravitex.trainmaster.helper.RailItemSequenceBuilder;
-import de.gravitex.trainmaster.logic.dlh.TrackPopulation;
-import de.gravitex.trainmaster.logic.manager.TrackManager;
-import de.gravitex.trainmaster.logic.manager.WaggonManager;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailtItemSequenceMembershipRepository;
-import de.gravitex.trainmaster.repo.RailtItemSequenceRepository;
+import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
+import de.gravitex.trainmaster.util.SimpleTrackRenderer;
 
 @DataJpaTest
 public class TrainMasterDatabaseTest {
@@ -34,7 +31,7 @@ public class TrainMasterDatabaseTest {
     private TrackRepository trackRepository;
     
     @Autowired
-    private RailtItemSequenceRepository railtItemSequenceRepository;
+    private RailItemSequenceRepository railItemSequenceRepository;
     
     @Autowired
     private RailtItemSequenceMembershipRepository railtItemSequenceMembershipRepository;
@@ -48,12 +45,38 @@ public class TrainMasterDatabaseTest {
     	Station station = new Station("S1");
 		stationRepository.save(station);
 
+		Waggon waggon = new Waggon("123");
+		railItemRepository.save(waggon);
+		
     	Track track = new Track("123");
     	track.setStation(station);
 		trackRepository.save(track);
+
+		RailtItemSequence railtItemSequence = new RailtItemSequence();
+		railtItemSequence.setRailtItemSequenceHolder(track);
+		railItemSequenceRepository.save(railtItemSequence);
+
+		RailItemSequenceMembership sequenceMembership = new RailItemSequenceMembership();
+		sequenceMembership.setRailItem(waggon);
+		sequenceMembership.setRailtItemSequence(railtItemSequence);
+		railtItemSequenceMembershipRepository.save(sequenceMembership);
     	
-    	List<Track> findAll = trackRepository.findAll();
+    	List<Track> allTracks = trackRepository.findAll();
+		
+		List<Track> findAll = allTracks;
 		assertEquals(1, findAll.size());
+		
+		List<RailItemSequenceMembership> risms = railtItemSequenceMembershipRepository.findAll();
+		List<RailtItemSequence> seqs = railItemSequenceRepository.findAll();
+		
+		SimpleTrackRenderer simpleTrackRenderer = new SimpleTrackRenderer(allTracks);
+		List<RailItem> railItems = null;
+		for (Track t : allTracks) {
+			railItems = railItemRepository.findByTrack(track);
+			simpleTrackRenderer.putTrackWaggons(track, railItems);
+			int werner = 5;
+		}
+		simpleTrackRenderer.render();
 		
 		/*
 		RailtItemSequence waggonSequenceAForExit = new RailItemSequenceBuilder()
@@ -78,11 +101,6 @@ public class TrainMasterDatabaseTest {
 				membership.setRailtItemSequence(waggonSequence);
 				railtItemSequenceMembershipRepository.save(membership);				
 			}
-		}
-		
-		List<Track> tracks = trackRepository.findAll();
-		for (Track t : tracks) {
-			System.out.println(" ------------------ track ------------------ ");
 		}
 		*/
     }

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import de.gravitex.trainmaster.entity.RailtItemSequence;
 
 @Repository
-public interface RailtItemSequenceRepository extends JpaRepository<RailtItemSequence, Long> {
+public interface RailItemSequenceRepository extends JpaRepository<RailtItemSequence, Long> {
 
 }

@@ -18,5 +18,12 @@ class RailItemSequenceMembership extends BaseEntity
 '---
 
 Station "1" -- "n" Track
+TrainRun "1" -- "n" TrainRunSection
+
+RailtItemSequence "n" -- "1" Track
+RailtItemSequence "1" -- "1" Train
+
+RailtItemSequence "1" -- "n" RailItemSequenceMembership
+RailItem "1" -- "1" RailItemSequenceMembership
 
 @enduml

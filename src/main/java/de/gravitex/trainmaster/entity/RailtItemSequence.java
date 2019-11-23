@@ -14,9 +14,6 @@ import lombok.Data;
 public class RailtItemSequence extends BaseEntity {
 	
 	@OneToOne
-	private Track track;
-	
-	@OneToOne
 	private RailtItemSequenceHolder railtItemSequenceHolder;
 
 	@OneToMany

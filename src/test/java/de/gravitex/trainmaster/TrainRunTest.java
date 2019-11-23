@@ -16,9 +16,9 @@ import de.gravitex.trainmaster.entity.Waggon;
 import de.gravitex.trainmaster.entity.enumeration.TrainRunState;
 import de.gravitex.trainmaster.helper.RailItemSequenceBuilder;
 import de.gravitex.trainmaster.logic.TrainRunner;
-import de.gravitex.trainmaster.logic.manager.TrackManager;
-import de.gravitex.trainmaster.logic.manager.TrainRunManager;
-import de.gravitex.trainmaster.logic.manager.WaggonManager;
+import de.gravitex.trainmaster.manager.TrackManager;
+import de.gravitex.trainmaster.manager.TrainRunManager;
+import de.gravitex.trainmaster.manager.WaggonManager;
 
 public class TrainRunTest {
 
