@@ -22,12 +22,4 @@ public class EmployeeRepositoryTests {
         employeeRepository.save(new Employee("admin", "admin", "admin@gmail.com"));
         assertEquals(2, employeeRepository.findAll().size());
     }
-    
-    @Test
-    public void testError() {
-
-        employeeRepository.save(new Employee("admin", "admin", "admin@gmail.com"));
-        employeeRepository.save(new Employee("admin", "admin", "admin@gmail.com"));
-        assertEquals(3, employeeRepository.findAll().size());
-    }
 }

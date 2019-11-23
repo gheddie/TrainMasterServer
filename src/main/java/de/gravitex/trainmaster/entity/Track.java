@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(exclude = "railItemSequences")
 public class Track extends RailtItemSequenceHolder {
 
+	@NotNull
 	@OneToOne
 	private Station station;
 	
