@@ -103,8 +103,11 @@ public class TrainMasterDatabaseTest {
 		renderTracksAndWaggons(simpleTrackRenderer);
 
 		// TODO run train
-		new TrainRunner().runTrain(track1Station1, seqLocos,
+		TrainRunner trainRunner = new TrainRunner();
+		trainRunner.withArguments(track1Station1, seqLocos,
 				seqTrack1Station1, track1Station2);
+		trainRunner.depart();
+		trainRunner.arrive();
 
 		renderTracksAndWaggons(simpleTrackRenderer);
 	}

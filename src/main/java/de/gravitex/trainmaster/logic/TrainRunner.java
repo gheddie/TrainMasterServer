@@ -13,10 +13,12 @@ import lombok.Data;
 public class TrainRunner {
 
 	private Track entryTrack;
+	
+	private Train train;
 
-	public void runTrain(Track exitTrack, RailItemSequence locomotiveSequence, RailItemSequence waggonSequenceForExit, Track aEntryTrack) {
+	public void withArguments(Track exitTrack, RailItemSequence locomotiveSequence, RailItemSequence waggonSequenceForExit, Track aEntryTrack) {
 		
-		Train train = new Train();
+		train = new Train();
 		train.setWaggonSequence(waggonSequenceForExit);
 
 		entryTrack = aEntryTrack;
@@ -26,8 +28,15 @@ public class TrainRunner {
 		train.setTrainRun(trainRun);
 
 		train = TrainRunManager.prepareTrain(train, locomotiveSequence, waggonSequenceForExit);
-		
-		train = TrainRunManager.departTrain(train);
+	}
+
+	public Train arrive() {
 		train = TrainRunManager.arriveTrain(train);
+		return train;
+	}
+
+	public Train depart() {
+		train = TrainRunManager.departTrain(train);
+		return train;
 	}
 }

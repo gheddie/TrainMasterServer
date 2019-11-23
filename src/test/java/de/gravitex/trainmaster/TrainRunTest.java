@@ -41,7 +41,10 @@ public class TrainRunTest {
 		assertEquals(TrackManager.getRailItemIdetifiersAsString(trackExitS1), "LOCO1@0#LOCO2@1#WAG1@2#WAG2@3#WAG3@4#WAG4@5#WAG5@6");
 		
 		TrainRunner trainRunner = new TrainRunner();
-		trainRunner.runTrain(trackExitS1, locomotiveSequence, waggonSequenceAForExit, new Track("TEntryS2"));
+		trainRunner.withArguments(trackExitS1, locomotiveSequence, waggonSequenceAForExit, new Track("TEntryS2"));
+		
+		trainRunner.depart();
+		trainRunner.arrive();
 		
 		// waggons must be on the entry track in station S2!!
 		assertEquals("LOCO1@0#LOCO2@1#WAG1@2#WAG2@3#WAG3@4", TrackManager.getRailItemIdetifiersAsString(trainRunner.getEntryTrack()));

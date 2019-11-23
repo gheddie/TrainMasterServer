@@ -26,7 +26,7 @@ public class SimpleTrackRenderer {
 				if (itemsByTrack != null) {
 					String itemString = "";
 					for (RailItem item : itemsByTrack) {
-						itemString += "[" + item.getIdentifier() + "]";
+						itemString += "[" + item.getIdentifier() + "@"+0+"]";
 					}
 					System.out.println("[" + t.getName() + "] --> " + itemString);
 				}
