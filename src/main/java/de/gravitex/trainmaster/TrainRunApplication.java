@@ -2,14 +2,13 @@ package de.gravitex.trainmaster;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-// @ComponentScan(basePackages= {"de.gravitex.trainmaster.service"}) 
-public class DemoApplication {
+// @ComponentScan(basePackages= {"de.gravitex.trainmaster.repo"}) 
+public class TrainRunApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(TrainRunApplication.class, args);
 	}
 
 }
