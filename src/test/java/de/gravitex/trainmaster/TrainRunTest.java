@@ -95,6 +95,7 @@ public class TrainRunTest {
 		assertEquals("LOCO1@0#LOCO2@1#WAG1@2#WAG2@3#WAG3@4", TrackManager.getRailItemIdetifiersAsString(trackEntryS2));
 	}
 
+	/*
 	@Test
 	public void testSimpleTrainRun() {
 
@@ -137,4 +138,5 @@ public class TrainRunTest {
 
 		assertEquals(TrainRunState.FINSHED, train.getTrainRun().getTrainRunState());
 	}
+	*/
 }
