@@ -37,12 +37,12 @@ public class TrainRunManager {
 		trainRun.setTrainRunState(TrainRunState.ARRIVED);
 		// switch locos to entry track (if any)
 		if (train.getLocomotives() != null) {
-			train.getLocomotives().setRailtItemSequenceHolder(entryTrack);
+			train.getLocomotives().setRailItemSequenceHolder(entryTrack);
 			entryTrack.getRailItemSequences().add(train.getLocomotives());
 		}
 		// switch waggons to entry track (if any)
 		if (train.getWaggonSequence() != null) {
-			train.getWaggonSequence().setRailtItemSequenceHolder(entryTrack);
+			train.getWaggonSequence().setRailItemSequenceHolder(entryTrack);
 			entryTrack.getRailItemSequences().add(train.getWaggonSequence());
 		}
 		train.setActualStation(trainRunSectionByIndex.getStationTo().getStation());
@@ -55,7 +55,7 @@ public class TrainRunManager {
 		return train;
 	}
 
-	public static Train prepareTrain(Train train, RailItemSequence locomotiveSequence, RailItemSequence... waggonSequences) throws TrainRunException {
+	public static Train prepareTrain(Train train, RailItemSequence locomotiveSequence, RailItemSequence waggonSequenceForExit) throws TrainRunException {
 
 		if (train.getTrainRun() == null) {
 			throw new TrainRunException("train must have a train run set!!");
@@ -64,19 +64,17 @@ public class TrainRunManager {
 		Track railItemTrack = null;
 		HashSet<Track> trackSet = new HashSet<>();
 		if (locomotiveSequence != null) {
-			railItemTrack = (Track) locomotiveSequence.getRailtItemSequenceHolder();
+			railItemTrack = (Track) locomotiveSequence.getRailItemSequenceHolder();
 			if (railItemTrack == null) {
 				throw new TrainRunException("loco sequence without a track detected!!");
 			}
 			trackSet.add(railItemTrack);
 		}
-		for (RailItemSequence railtItemSequence : waggonSequences) {
-			railItemTrack = (Track) railtItemSequence.getRailtItemSequenceHolder();
-			if (railItemTrack == null) {
-				throw new TrainRunException("waggon sequence without a track detected!!");
-			}
-			trackSet.add(railItemTrack);
+		railItemTrack = (Track) waggonSequenceForExit.getRailItemSequenceHolder();
+		if (railItemTrack == null) {
+			throw new TrainRunException("waggon sequence without a track detected!!");
 		}
+		trackSet.add(railItemTrack);
 		// there must be exactly one track (for locos and waggons)!!
 		if (!(trackSet.size() == 1)) {
 			throw new TrainRunException("more than one track detected on preparing a train!!");
@@ -85,12 +83,10 @@ public class TrainRunManager {
 		train.setLocomotives(locomotiveSequence);
 		// switch loco(s) to train!!
 		if (locomotiveSequence != null) {
-			locomotiveSequence.setRailtItemSequenceHolder(train);
+			locomotiveSequence.setRailItemSequenceHolder(train);
 		}
 		// switch waggon sequences to the train!!
-		for (RailItemSequence railtItemSequence : waggonSequences) {
-			railtItemSequence.setRailtItemSequenceHolder(train);
-		}
+		waggonSequenceForExit.setRailItemSequenceHolder(train);
 		train.getTrainRun().setTrainRunState(TrainRunState.PREPARED);
 		train.setActualStation(train.getTrainRun().getTrainRunSectionByIndex().getStationFrom().getStation());
 		return train;

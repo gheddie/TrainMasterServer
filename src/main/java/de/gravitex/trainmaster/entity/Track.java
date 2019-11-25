@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -15,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @Data
 // avoid stack overflow from circular dependency (RailItemSequence <-> Track)
 @EqualsAndHashCode(exclude = "railItemSequences")
-public class Track extends RailtItemSequenceHolder {
+public class Track extends RailtItemSequenceHolder implements PositionedItem {
 
 	@NotNull
 	@OneToOne
@@ -29,5 +30,15 @@ public class Track extends RailtItemSequenceHolder {
 	public Track(String name) {
 		super();
 		this.name = name;
+	}
+	
+	@Override
+	@PrePersist
+	public void adjustedOrdinalPositions() {
+		int ordinalIndex = 0;
+		for (RailItemSequence r : railItemSequences) {
+			r.setOrdinalPosition(ordinalIndex);
+			ordinalIndex++;
+		}
 	}
 }

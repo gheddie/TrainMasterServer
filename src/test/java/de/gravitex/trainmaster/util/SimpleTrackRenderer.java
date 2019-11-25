@@ -3,7 +3,7 @@ package de.gravitex.trainmaster.util;
 import java.util.HashMap;
 import java.util.List;
 
-import de.gravitex.trainmaster.entity.RailItem;
+import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.Track;
 import lombok.Data;
@@ -12,21 +12,25 @@ import lombok.Data;
 public class SimpleTrackRenderer {
 
 	private HashMap<Station, StationsAndTracksAndWaggons> stationsAndTracksAndWaggons = new HashMap<Station, SimpleTrackRenderer.StationsAndTracksAndWaggons>();
+	
+	private String description;
 
 	public void render() {
-		System.out.println("---------------------------------------------");
+		System.out.println("---------"+description+"------------------------------------");
 
 		StationsAndTracksAndWaggons sataw = null;
 		for (Station station : stationsAndTracksAndWaggons.keySet()) {
-			System.out.println("[@@@ STATION :: "+station.getStationName()+" @@@]");
+			System.out.println("[@@@ STATION :: " + station.getStationName() + " @@@]");
 			sataw = stationsAndTracksAndWaggons.get(station);
-			List<RailItem> itemsByTrack = null;
+			List<RailItemSequenceMembership> itemsByTrack = null;
 			for (Track t : sataw.getRailItemsByTrack().keySet()) {
 				itemsByTrack = sataw.getRailItemsByTrack().get(t);
 				if (itemsByTrack != null) {
 					String itemString = "";
-					for (RailItem item : itemsByTrack) {
-						itemString += "[" + item.getIdentifier() + "@"+0+"]";
+					for (RailItemSequenceMembership membership : itemsByTrack) {
+						itemString += "[" + membership.getRailItem().getIdentifier() + "::"
+								+ membership.getRailItemSequence().getOrdinalPosition() + "/"
+								+ membership.getOrdinalPosition() + "]";
 					}
 					System.out.println("[" + t.getName() + "] --> " + itemString);
 				}
@@ -36,9 +40,9 @@ public class SimpleTrackRenderer {
 		System.out.println("---------------------------------------------");
 	}
 
-	public void putTrackWaggons(Track track, List<RailItem> railItems) {
+	public void putTrackWaggons(Track track, List<RailItemSequenceMembership> railItems) {
 		if (stationsAndTracksAndWaggons.get(track.getStation()) == null) {
-			stationsAndTracksAndWaggons.put(track.getStation(), new StationsAndTracksAndWaggons());	
+			stationsAndTracksAndWaggons.put(track.getStation(), new StationsAndTracksAndWaggons());
 		}
 		stationsAndTracksAndWaggons.get(track.getStation()).getRailItemsByTrack().put(track, railItems);
 	}
@@ -48,6 +52,6 @@ public class SimpleTrackRenderer {
 	@Data
 	private class StationsAndTracksAndWaggons {
 
-		private HashMap<Track, List<RailItem>> railItemsByTrack = new HashMap<Track, List<RailItem>>();
+		private HashMap<Track, List<RailItemSequenceMembership>> railItemsByTrack = new HashMap<Track, List<RailItemSequenceMembership>>();
 	}
 }
