@@ -1,4 +1,4 @@
-package de.gravitex.trainmaster.util;
+package de.gravitex.trainmaster.dlh;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,9 +15,9 @@ public class SimpleTrackRenderer {
 	
 	private String description;
 
-	public void render() {
+	public String render() {
 		System.out.println("---------"+description+"------------------------------------");
-
+		String result = null;
 		StationsAndTracksAndWaggons sataw = null;
 		for (Station station : stationsAndTracksAndWaggons.keySet()) {
 			System.out.println("[@@@ STATION :: " + station.getStationName() + " @@@]");
@@ -32,12 +32,13 @@ public class SimpleTrackRenderer {
 								+ membership.getRailItemSequence().getOrdinalPosition() + "/"
 								+ membership.getOrdinalPosition() + "]";
 					}
-					System.out.println("[" + t.getName() + "] --> " + itemString);
+					result = "[" + t.getName() + "] --> " + itemString;
+					System.out.println(result);
 				}
 			}
 		}
-
 		System.out.println("---------------------------------------------");
+		return result;
 	}
 
 	public void putTrackWaggons(Track track, List<RailItemSequenceMembership> railItems) {

@@ -3,6 +3,7 @@ package de.gravitex.trainmaster.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import de.gravitex.trainmaster.dlh.EntityHelper;
 import lombok.Data;
 
 @Entity
@@ -19,11 +20,6 @@ public class Locomotive extends RailItem {
 
 	@Override
 	public RailItem asConcreteItem() {
-		return new Locomotive(getIdentifier());
-	}
-
-	public Locomotive(String locoNumber) {
-		super();
-		this.locoNumber = locoNumber;
+		return EntityHelper.makeLocomotive(getIdentifier());
 	}
 }

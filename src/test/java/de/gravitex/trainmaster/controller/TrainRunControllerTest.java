@@ -21,5 +21,6 @@ public class TrainRunControllerTest {
 	public void testGreeting() throws Exception {
 		mockMvc.perform(get("/meeting")).andExpect(content().string(containsString("Hello, Meeting!")));
 		mockMvc.perform(get("/greeting")).andExpect(content().string(containsString("Hello, World!")));
+		mockMvc.perform(get("/train")).andExpect(content().string(containsString("123-456-789")));
 	}
 }

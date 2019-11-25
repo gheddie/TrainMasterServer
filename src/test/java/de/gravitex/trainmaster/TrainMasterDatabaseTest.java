@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import de.gravitex.trainmaster.dlh.EntityHelper;
+import de.gravitex.trainmaster.dlh.SimpleTrackRenderer;
 import de.gravitex.trainmaster.entity.Locomotive;
 import de.gravitex.trainmaster.entity.RailItem;
 import de.gravitex.trainmaster.entity.RailItemSequence;
@@ -31,7 +33,6 @@ import de.gravitex.trainmaster.repo.TrackRepository;
 import de.gravitex.trainmaster.repo.TrainRepository;
 import de.gravitex.trainmaster.repo.TrainRunRepository;
 import de.gravitex.trainmaster.repo.TrainRunSectionRepository;
-import de.gravitex.trainmaster.util.SimpleTrackRenderer;
 
 @DataJpaTest
 public class TrainMasterDatabaseTest {
@@ -50,16 +51,16 @@ public class TrainMasterDatabaseTest {
 
 	@Autowired
 	private RailItemRepository railItemRepository;
-	
+
 	@Autowired
 	private TrainRepository trainRepository;
-	
+
 	@Autowired
 	private TrainRunRepository trainRunRepository;
-	
+
 	@Autowired
 	private TrainRunSectionRepository trainRunSectionRepository;
-	
+
 	@Autowired
 	private StationInfoRepository stationInfoRepository;
 
@@ -75,22 +76,22 @@ public class TrainMasterDatabaseTest {
 		Station station2 = new Station("S2");
 		stationRepository.save(station2);
 
-		Locomotive locomotive1 = new Locomotive("L1");
+		Locomotive locomotive1 = EntityHelper.makeLocomotive("L1");
 		railItemRepository.save(locomotive1);
 
-		Waggon waggon123 = new Waggon("123");
+		Waggon waggon123 = EntityHelper.makeWaggon("123");
 		railItemRepository.save(waggon123);
 
-		Waggon waggon234 = new Waggon("234");
+		Waggon waggon234 = EntityHelper.makeWaggon("234");
 		railItemRepository.save(waggon234);
 
-		Waggon waggon345 = new Waggon("345");
+		Waggon waggon345 = EntityHelper.makeWaggon("345");
 		railItemRepository.save(waggon345);
 
-		Waggon waggon456 = new Waggon("456");
+		Waggon waggon456 = EntityHelper.makeWaggon("456");
 		railItemRepository.save(waggon456);
 
-		Waggon waggon567 = new Waggon("567");
+		Waggon waggon567 = EntityHelper.makeWaggon("567");
 		railItemRepository.save(waggon567);
 
 		Track track1Station1 = new Track("track1Station1");
@@ -130,7 +131,7 @@ public class TrainMasterDatabaseTest {
 
 		// run train
 		TrainRunner trainRunner = new TrainRunner();
-		
+
 		// create train with a train run Station 1 -> Station 2
 		StationInfo stationInfo1 = new StationInfo(station1, null, track1Station1);
 		stationInfoRepository.save(stationInfo1);
@@ -144,7 +145,7 @@ public class TrainMasterDatabaseTest {
 		train.setTrainRun(trainRun);
 		trainRun.getTrainRunSections().add(sec1);
 		trainRepository.save(train);
-		
+
 		trainRunner.withArguments(track1Station1, seqLocos, seqTrack1Station1, track1Station2, train);
 
 		trainRunner.depart();
@@ -161,7 +162,7 @@ public class TrainMasterDatabaseTest {
 	private void persistTrainRunner(TrainRunner trainRunner) {
 		trainRepository.save(trainRunner.getTrain());
 		if (trainRunner.getTrain().getActualStation() != null) {
-			stationRepository.save(trainRunner.getTrain().getActualStation());			
+			stationRepository.save(trainRunner.getTrain().getActualStation());
 		}
 		trackRepository.save(trainRunner.getEntryTrack());
 		stationRepository.save(trainRunner.getEntryTrack().getStation());
@@ -176,7 +177,7 @@ public class TrainMasterDatabaseTest {
 		entityManager.flush();
 	}
 
-	private void renderTracksAndWaggons(String description) {
+	private String renderTracksAndWaggons(String description) {
 		List<RailItemSequenceMembership> railItems = null;
 		SimpleTrackRenderer simpleTrackRenderer = new SimpleTrackRenderer();
 		simpleTrackRenderer.setDescription(description);
@@ -184,7 +185,7 @@ public class TrainMasterDatabaseTest {
 			railItems = railItemRepository.findByTrack(t);
 			simpleTrackRenderer.putTrackWaggons(t, railItems);
 		}
-		simpleTrackRenderer.render();
+		return simpleTrackRenderer.render();
 	}
 
 	private void putRailItemToTrack(RailItem railItem, Track track, RailItemSequence railtItemSequence,
