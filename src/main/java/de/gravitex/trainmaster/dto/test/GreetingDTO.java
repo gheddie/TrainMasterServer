@@ -1,12 +1,14 @@
-package de.gravitex.trainmaster.controller;
+package de.gravitex.trainmaster.dto.test;
 
-public class Greeting {
+import de.gravitex.trainmaster.dto.ServerDTO;
+
+public class GreetingDTO implements ServerDTO {
 
 	private final long id;
 	
 	private final String content;
 
-	public Greeting(long id, String content) {
+	public GreetingDTO(long id, String content) {
 		this.id = id;
 		this.content = content;
 	}

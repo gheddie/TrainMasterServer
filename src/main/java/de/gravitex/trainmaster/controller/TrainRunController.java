@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dlh.EntityHelper;
 import de.gravitex.trainmaster.dlh.SimpleTrackRenderer;
+import de.gravitex.trainmaster.dto.RailItemDTO;
+import de.gravitex.trainmaster.dto.StationAndTracksAndWaggonsDTO;
+import de.gravitex.trainmaster.dto.StationDTO;
+import de.gravitex.trainmaster.dto.TrackDTO;
+import de.gravitex.trainmaster.dto.test.GreetingDTO;
 import de.gravitex.trainmaster.entity.Locomotive;
 import de.gravitex.trainmaster.entity.RailItem;
 import de.gravitex.trainmaster.entity.RailItemSequence;
@@ -28,8 +33,8 @@ import de.gravitex.trainmaster.entity.TrainRunSection;
 import de.gravitex.trainmaster.entity.Waggon;
 import de.gravitex.trainmaster.logic.TrainRunner;
 import de.gravitex.trainmaster.repo.RailItemRepository;
-import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
+import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.StationInfoRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
@@ -80,23 +85,23 @@ public class TrainRunController {
     ITrackService productService;
     
 	@RequestMapping(ServerMappings.MEETING)
-	public Greeting meeting(@RequestParam(value = "name", defaultValue = "Meeting") String name) {
+	public GreetingDTO meeting(@RequestParam(value = "name", defaultValue = "Meeting") String name) {
 		trainRunRepository.save(new TrainRun());
 		waggonRepository.save(EntityHelper.makeWaggon("123A"));
 		System.out.println("meeting [train runs] : " + trainRunRepository.findAll().size());
 		System.out.println("meeting [waggons] : " + waggonRepository.findAll().size());
-		return new Greeting(counter.incrementAndGet(), String.format(template, name));
+		return new GreetingDTO(counter.incrementAndGet(), String.format(template, name));
 	}
 
 	@RequestMapping(ServerMappings.GREETING)
-	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+	public GreetingDTO greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 		trainRunRepository.save(new TrainRun());
 		trainRunRepository.save(new TrainRun());
 		waggonRepository.save(EntityHelper.makeWaggon("234A"));
 		waggonRepository.save(EntityHelper.makeWaggon("345A"));
 		System.out.println("meeting [train runs] : " + trainRunRepository.findAll().size());
 		System.out.println("meeting [waggons] : " + waggonRepository.findAll().size());
-		return new Greeting(counter.incrementAndGet(), String.format(template, name));
+		return new GreetingDTO(counter.incrementAndGet(), String.format(template, name));
 	}
 	
 	@Transactional
@@ -200,6 +205,31 @@ public class TrainRunController {
 		sequenceMembership.setOrdinalPosition(ordinalPosition);
 		sequenceMembership.setRailItemSequence(railItemSequence);
 		railItemSequenceMembershipRepository.save(sequenceMembership);
+	}
+	
+	@Transactional
+	@RequestMapping(ServerMappings.TRACKPOPULATION)
+	public ResponseEntity<StationAndTracksAndWaggonsDTO> trackpopulation(@RequestParam(value = "stationName") String stationName) {
+		StationAndTracksAndWaggonsDTO result = new StationAndTracksAndWaggonsDTO();
+		StationDTO stationDTO = new StationDTO();
+		stationDTO.setName("S1");
+		result.addStation(stationDTO);
+		TrackDTO trackDTO1 = new TrackDTO();
+		trackDTO1.setTrackNumber("T1");
+		TrackDTO trackDTO2 = new TrackDTO();
+		trackDTO2.setTrackNumber("T2");
+		result.addTrack(stationDTO, trackDTO1);
+		result.addTrack(stationDTO, trackDTO2);
+		RailItemDTO railItemDTOW1 = new RailItemDTO();
+		railItemDTOW1.setIdentifier("W1");
+		RailItemDTO railItemDTOW2 = new RailItemDTO();
+		railItemDTOW2.setIdentifier("W2");
+		RailItemDTO railItemDTOW3 = new RailItemDTO();
+		railItemDTOW3.setIdentifier("W3");
+		result.addRailItem(stationDTO, trackDTO1, railItemDTOW1);
+		result.addRailItem(stationDTO, trackDTO1, railItemDTOW2);
+		result.addRailItem(stationDTO, trackDTO2, railItemDTOW3);
+		return new ResponseEntity<StationAndTracksAndWaggonsDTO>(result, HttpStatus.OK);
 	}
 	
 	private String renderTracksAndWaggons(String description) {

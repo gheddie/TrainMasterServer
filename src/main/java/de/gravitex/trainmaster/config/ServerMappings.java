@@ -7,4 +7,6 @@ public class ServerMappings {
 	public static final String GREETING = "/greeting";
 	
 	public static final String TRAIN = "/train";
+
+	public static final String TRACKPOPULATION = "/trackpopulation";
 }
