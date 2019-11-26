@@ -6,6 +6,6 @@ import lombok.Data;
 
 @Entity
 @Data
-public abstract class RailtItemSequenceHolder extends BaseEntity {
+public abstract class RailItemSequenceHolder extends BaseEntity {
 
 }

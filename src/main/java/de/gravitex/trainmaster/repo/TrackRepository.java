@@ -12,4 +12,6 @@ import de.gravitex.trainmaster.entity.Track;
 public interface TrackRepository extends JpaRepository<Track, Long> {
 
 	List<Track> findByStation(Station station);
+
+	Track findByTrackNumber(String trackNumber);
 }

@@ -26,7 +26,7 @@ import de.gravitex.trainmaster.entity.Waggon;
 import de.gravitex.trainmaster.logic.TrainRunner;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
-import de.gravitex.trainmaster.repo.RailtItemSequenceMembershipRepository;
+import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
 import de.gravitex.trainmaster.repo.StationInfoRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
@@ -47,7 +47,7 @@ public class TrainMasterDatabaseTest {
 	private RailItemSequenceRepository railItemSequenceRepository;
 
 	@Autowired
-	private RailtItemSequenceMembershipRepository railtItemSequenceMembershipRepository;
+	private RailItemSequenceMembershipRepository railItemSequenceMembershipRepository;
 
 	@Autowired
 	private RailItemRepository railItemRepository;
@@ -188,19 +188,19 @@ public class TrainMasterDatabaseTest {
 		return simpleTrackRenderer.render();
 	}
 
-	private void putRailItemToTrack(RailItem railItem, Track track, RailItemSequence railtItemSequence,
+	private void putRailItemToTrack(RailItem railItem, Track track, RailItemSequence railItemSequence,
 			int ordinalPosition) {
 
-		System.out.println("putWaggonToTrack :: waggon = " + railItem.getIdentifier() + ", track = " + track.getName()
+		System.out.println("putWaggonToTrack :: waggon = " + railItem.getIdentifier() + ", track = " + track.getTrackNumber()
 				+ ", station = " + track.getStation().getStationName());
 
-		railtItemSequence.setRailItemSequenceHolder(track);
-		railItemSequenceRepository.save(railtItemSequence);
+		railItemSequence.setRailItemSequenceHolder(track);
+		railItemSequenceRepository.save(railItemSequence);
 
 		RailItemSequenceMembership sequenceMembership = new RailItemSequenceMembership();
 		sequenceMembership.setRailItem(railItem);
 		sequenceMembership.setOrdinalPosition(ordinalPosition);
-		sequenceMembership.setRailItemSequence(railtItemSequence);
-		railtItemSequenceMembershipRepository.save(sequenceMembership);
+		sequenceMembership.setRailItemSequence(railItemSequence);
+		railItemSequenceMembershipRepository.save(sequenceMembership);
 	}
 }

@@ -16,20 +16,20 @@ import lombok.EqualsAndHashCode;
 @Data
 // avoid stack overflow from circular dependency (RailItemSequence <-> Track)
 @EqualsAndHashCode(exclude = "railItemSequences")
-public class Track extends RailtItemSequenceHolder implements PositionedItem {
+public class Track extends RailItemSequenceHolder implements PositionedItem {
 
 	@NotNull
 	@OneToOne
 	private Station station;
 	
-	private String name;
+	private String trackNumber;
 	
 	@OneToMany
 	private List<RailItemSequence> railItemSequences = new ArrayList<>();
 	
 	public Track(String name) {
 		super();
-		this.name = name;
+		this.trackNumber = name;
 	}
 	
 	@Override

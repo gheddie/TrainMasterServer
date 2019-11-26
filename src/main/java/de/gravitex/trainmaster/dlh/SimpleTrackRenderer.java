@@ -32,7 +32,7 @@ public class SimpleTrackRenderer {
 								+ membership.getRailItemSequence().getOrdinalPosition() + "/"
 								+ membership.getOrdinalPosition() + "]";
 					}
-					result = "[" + t.getName() + "] --> " + itemString;
+					result = "[" + t.getTrackNumber() + "] --> " + itemString;
 					System.out.println(result);
 				}
 			}

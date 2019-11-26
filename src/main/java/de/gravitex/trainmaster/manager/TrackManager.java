@@ -20,10 +20,10 @@ public class TrackManager {
 			locomotiveSequence.setRailItemSequenceHolder(track);
 		}
 		// waggons
-		for (RailItemSequence railtItemSequence : waggonSequences) {
-			railtItemSequence.setRailItemSequenceHolder(track);
-			track.getRailItemSequences().add(railtItemSequence);
-			railtItemSequence.setRailItemSequenceHolder(track);
+		for (RailItemSequence railItemSequence : waggonSequences) {
+			railItemSequence.setRailItemSequenceHolder(track);
+			track.getRailItemSequences().add(railItemSequence);
+			railItemSequence.setRailItemSequenceHolder(track);
 		}
 		return new TrackPopulation(track, locomotiveSequence, Arrays.asList(waggonSequences));
 	}

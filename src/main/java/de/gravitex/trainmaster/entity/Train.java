@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Train extends RailtItemSequenceHolder {
+public class Train extends RailItemSequenceHolder {
 	
 	@OneToOne
 	public RailItemSequence locomotives;

@@ -28,7 +28,7 @@ public class RailItemSequence extends BaseEntity implements PositionedItem {
 	
 	@ForeignKey(name = "rail_item_sequence_holder_id")
 	@OneToOne
-	private RailtItemSequenceHolder railItemSequenceHolder;
+	private RailItemSequenceHolder railItemSequenceHolder;
 
 	@OneToMany
 	private List<RailItemSequenceMembership> railItemSequenceMemberships = new ArrayList<>();

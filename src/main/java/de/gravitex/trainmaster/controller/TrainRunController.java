@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dlh.EntityHelper;
 import de.gravitex.trainmaster.dlh.SimpleTrackRenderer;
 import de.gravitex.trainmaster.entity.Locomotive;
@@ -28,7 +29,7 @@ import de.gravitex.trainmaster.entity.Waggon;
 import de.gravitex.trainmaster.logic.TrainRunner;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
-import de.gravitex.trainmaster.repo.RailtItemSequenceMembershipRepository;
+import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
 import de.gravitex.trainmaster.repo.StationInfoRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
@@ -36,6 +37,7 @@ import de.gravitex.trainmaster.repo.TrainRepository;
 import de.gravitex.trainmaster.repo.TrainRunRepository;
 import de.gravitex.trainmaster.repo.TrainRunSectionRepository;
 import de.gravitex.trainmaster.repo.WaggonRepository;
+import de.gravitex.trainmaster.service.ITrackService;
 
 @RestController
 public class TrainRunController {
@@ -54,7 +56,7 @@ public class TrainRunController {
 	private RailItemSequenceRepository railItemSequenceRepository;
 
 	@Autowired
-	private RailtItemSequenceMembershipRepository railtItemSequenceMembershipRepository;
+	private RailItemSequenceMembershipRepository railItemSequenceMembershipRepository;
 
 	@Autowired
 	private RailItemRepository railItemRepository;
@@ -74,7 +76,10 @@ public class TrainRunController {
     @Autowired
     WaggonRepository waggonRepository;
     
-	@RequestMapping("/meeting")
+    @Autowired
+    ITrackService productService;
+    
+	@RequestMapping(ServerMappings.MEETING)
 	public Greeting meeting(@RequestParam(value = "name", defaultValue = "Meeting") String name) {
 		trainRunRepository.save(new TrainRun());
 		waggonRepository.save(EntityHelper.makeWaggon("123A"));
@@ -83,7 +88,7 @@ public class TrainRunController {
 		return new Greeting(counter.incrementAndGet(), String.format(template, name));
 	}
 
-	@RequestMapping("/greeting")
+	@RequestMapping(ServerMappings.GREETING)
 	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 		trainRunRepository.save(new TrainRun());
 		trainRunRepository.save(new TrainRun());
@@ -95,8 +100,8 @@ public class TrainRunController {
 	}
 	
 	@Transactional
-	@RequestMapping("/train")
-	public ResponseEntity<String> train(@RequestParam(value = "name", defaultValue = "Train") String name) {
+	@RequestMapping(ServerMappings.TRAIN)
+	public ResponseEntity<String> train(@RequestParam(value = "trackNumber") String trackNumber) {
 		
 		Station station1 = new Station("S1");
 		stationRepository.save(station1);
@@ -175,23 +180,26 @@ public class TrainRunController {
 		
 		renderTracksAndWaggons("AFTER DEPART");
 		
-		return new ResponseEntity<String>("123-456-789", HttpStatus.OK);
+		String trackSequence = productService.getTrackSequenceAsString(trackNumber);
+		
+		// return new ResponseEntity<String>("123-456-789", HttpStatus.OK);
+		return new ResponseEntity<String>(trackSequence, HttpStatus.OK);
 	}
 	
-	private void putRailItemToTrack(RailItem railItem, Track track, RailItemSequence railtItemSequence,
+	private void putRailItemToTrack(RailItem railItem, Track track, RailItemSequence railItemSequence,
 			int ordinalPosition) {
 
-		System.out.println("putWaggonToTrack :: waggon = " + railItem.getIdentifier() + ", track = " + track.getName()
+		System.out.println("putWaggonToTrack :: waggon = " + railItem.getIdentifier() + ", track = " + track.getTrackNumber()
 				+ ", station = " + track.getStation().getStationName());
 
-		railtItemSequence.setRailItemSequenceHolder(track);
-		railItemSequenceRepository.save(railtItemSequence);
+		railItemSequence.setRailItemSequenceHolder(track);
+		railItemSequenceRepository.save(railItemSequence);
 
 		RailItemSequenceMembership sequenceMembership = new RailItemSequenceMembership();
 		sequenceMembership.setRailItem(railItem);
 		sequenceMembership.setOrdinalPosition(ordinalPosition);
-		sequenceMembership.setRailItemSequence(railtItemSequence);
-		railtItemSequenceMembershipRepository.save(sequenceMembership);
+		sequenceMembership.setRailItemSequence(railItemSequence);
+		railItemSequenceMembershipRepository.save(sequenceMembership);
 	}
 	
 	private String renderTracksAndWaggons(String description) {

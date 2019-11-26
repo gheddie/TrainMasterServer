@@ -10,31 +10,31 @@ import de.gravitex.trainmaster.helper.StringHelper;
 
 public class WaggonManager {
 
-	public static RailItemSequence addWaggonToSequence(RailItemSequence railtItemSequence, RailItem... railItems) {
-		if (railtItemSequence == null) {
-			railtItemSequence = new RailItemSequence(0);
+	public static RailItemSequence addWaggonToSequence(RailItemSequence railItemSequence, RailItem... railItems) {
+		if (railItemSequence == null) {
+			railItemSequence = new RailItemSequence(0);
 		}
 		for (RailItem railItem : railItems) {
 			RailItemSequenceMembership railItemSequenceMembership = new RailItemSequenceMembership();
 			railItemSequenceMembership.setRailItem(railItem);
-			railtItemSequence.getRailItemSequenceMemberships().add(railItemSequenceMembership);
+			railItemSequence.getRailItemSequenceMemberships().add(railItemSequenceMembership);
 		}
-		return railtItemSequence;
+		return railItemSequence;
 	}
 
-	public static String getWaggonNumbersAsString(RailItemSequence railtItemSequence) {
+	public static String getWaggonNumbersAsString(RailItemSequence railItemSequence) {
 		List<String> waggonNumbers = new ArrayList<>();
-		for (RailItemSequenceMembership membership : railtItemSequence.getRailItemSequenceMemberships()) {
+		for (RailItemSequenceMembership membership : railItemSequence.getRailItemSequenceMemberships()) {
 			waggonNumbers.add(membership.getRailItem().getIdentifier());
 		}
 		return StringHelper.stringListAsOrderedAndSeparated(waggonNumbers);
 	}
 
-	public static RailItemSequence reverseWaggonSequence(RailItemSequence railtItemSequence) {
+	public static RailItemSequence reverseWaggonSequence(RailItemSequence railItemSequence) {
 		RailItemSequence reversedSequence = new RailItemSequence(0);
-		int removeIndex = railtItemSequence.getRailItemSequenceMemberships().size() - 1;
-		for (int counter = 0; counter < railtItemSequence.getRailItemSequenceMemberships().size(); counter++) {
-			RailItemSequenceMembership membership = railtItemSequence.getRailItemSequenceMemberships().get(removeIndex);
+		int removeIndex = railItemSequence.getRailItemSequenceMemberships().size() - 1;
+		for (int counter = 0; counter < railItemSequence.getRailItemSequenceMemberships().size(); counter++) {
+			RailItemSequenceMembership membership = railItemSequence.getRailItemSequenceMemberships().get(removeIndex);
 			membership.setOrdinalPosition(counter);
 			addWaggonToSequence(reversedSequence, membership.getRailItem());
 			removeIndex--;

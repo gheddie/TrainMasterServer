@@ -2,12 +2,12 @@
 
 abstract class BaseEntity
 
-class RailtItemSequence extends BaseEntity
-abstract class RailtItemSequenceHolder extends BaseEntity
+class RailItemSequence extends BaseEntity
+abstract class fItemSequenceHolder extends BaseEntity
 class Station extends BaseEntity
 class StationInfo extends BaseEntity
-class Track extends RailtItemSequenceHolder
-class Train extends RailtItemSequenceHolder
+class Track extends RailItemSequenceHolder
+class Train extends RailItemSequenceHolder
 class TrainRun extends BaseEntity
 class TrainRunSection extends BaseEntity
 class Waggon extends RailItem
@@ -20,10 +20,10 @@ class RailItemSequenceMembership extends BaseEntity
 Station "1" -- "n" Track
 TrainRun "1" -- "n" TrainRunSection
 
-RailtItemSequence "n" -- "1" Track
-RailtItemSequence "1" -- "1" Train
+RailItemSequence "n" -- "1" Track
+RailItemSequence "1" -- "1" Train
 
-RailtItemSequence "1" -- "n" RailItemSequenceMembership
+RailItemSequence "1" -- "n" RailItemSequenceMembership
 RailItem "1" -- "1" RailItemSequenceMembership
 
 @enduml
