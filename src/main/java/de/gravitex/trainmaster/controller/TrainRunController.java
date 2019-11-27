@@ -84,7 +84,7 @@ public class TrainRunController {
     @Autowired
     ITrackService productService;
     
-	@RequestMapping(ServerMappings.MEETING)
+	@RequestMapping(ServerMappings.TrainRun.MEETING)
 	public GreetingDTO meeting(@RequestParam(value = "name", defaultValue = "Meeting") String name) {
 		trainRunRepository.save(new TrainRun());
 		waggonRepository.save(EntityHelper.makeWaggon("123A"));
@@ -93,7 +93,7 @@ public class TrainRunController {
 		return new GreetingDTO(counter.incrementAndGet(), String.format(template, name));
 	}
 
-	@RequestMapping(ServerMappings.GREETING)
+	@RequestMapping(ServerMappings.TrainRun.GREETING)
 	public GreetingDTO greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 		trainRunRepository.save(new TrainRun());
 		trainRunRepository.save(new TrainRun());
@@ -105,7 +105,7 @@ public class TrainRunController {
 	}
 	
 	@Transactional
-	@RequestMapping(ServerMappings.TRAIN)
+	@RequestMapping(ServerMappings.TrainRun.TRAIN)
 	public ResponseEntity<String> train(@RequestParam(value = "trackNumber") String trackNumber) {
 		
 		Station station1 = new Station("S1");
@@ -208,7 +208,7 @@ public class TrainRunController {
 	}
 	
 	@Transactional
-	@RequestMapping(ServerMappings.TRACKPOPULATION)
+	@RequestMapping(ServerMappings.TrainRun.TRACKPOPULATION)
 	public ResponseEntity<StationAndTracksAndWaggonsDTO> trackpopulation(@RequestParam(value = "stationName") String stationName) {
 		StationAndTracksAndWaggonsDTO result = new StationAndTracksAndWaggonsDTO();
 		StationDTO stationDTO = new StationDTO();

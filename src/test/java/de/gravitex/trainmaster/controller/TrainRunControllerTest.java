@@ -30,7 +30,7 @@ public class TrainRunControllerTest {
 		ResultActions result = mockMvc.perform(get(ServerMappings.TRACKPOPULATION).param("stationName", "ssssssssssss"));
 		result.andExpect(content().string(containsString("Hello, Meeting!")));
 		*/
-		ResultActions result = mockMvc.perform(get(ServerMappings.TRACKPOPULATION).param("stationName", "ssssssssssss"));
+		ResultActions result = mockMvc.perform(get(ServerMappings.TrainRun.TRACKPOPULATION).param("stationName", "ssssssssssss"));
 		String json = result.andReturn().getResponse().getContentAsString();
 		ObjectMapper mapper = new ObjectMapper();
 		StationAndTracksAndWaggonsDTO stationAndTracksAndWaggons = mapper.readValue(json, StationAndTracksAndWaggonsDTO.class);
@@ -39,8 +39,8 @@ public class TrainRunControllerTest {
 
 	@Test
 	public void testGreeting() throws Exception {
-		mockMvc.perform(get(ServerMappings.MEETING)).andExpect(content().string(containsString("Hello, Meeting!")));
-		mockMvc.perform(get(ServerMappings.GREETING)).andExpect(content().string(containsString("Hello, World!")));
-		mockMvc.perform(get(ServerMappings.TRAIN).param("trackNumber", "track2Station1")).andExpect(content().string(containsString("123-456-789")));
+		mockMvc.perform(get(ServerMappings.TrainRun.MEETING)).andExpect(content().string(containsString("Hello, Meeting!")));
+		mockMvc.perform(get(ServerMappings.TrainRun.GREETING)).andExpect(content().string(containsString("Hello, World!")));
+		mockMvc.perform(get(ServerMappings.TrainRun.TRAIN).param("trackNumber", "track2Station1")).andExpect(content().string(containsString("123-456-789")));
 	}
 }
