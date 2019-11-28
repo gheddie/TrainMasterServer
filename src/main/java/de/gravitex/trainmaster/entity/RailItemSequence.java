@@ -8,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ForeignKey;
 
@@ -33,9 +31,8 @@ public class RailItemSequence extends BaseEntity implements PositionedItem {
 	@OneToMany
 	private List<RailItemSequenceMembership> railItemSequenceMemberships = new ArrayList<>();
 
-	public RailItemSequence(Integer ordinalPosition) {
+	public RailItemSequence() {
 		super();
-		this.ordinalPosition = ordinalPosition;
 	}
 
 	@Override

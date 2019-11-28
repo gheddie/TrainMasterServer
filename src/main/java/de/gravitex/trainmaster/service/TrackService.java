@@ -5,11 +5,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.gravitex.trainmaster.dto.RailItemDTO;
+import de.gravitex.trainmaster.dto.StationDTO;
+import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
+import de.gravitex.trainmaster.dto.TrackDTO;
 import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
+import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.Track;
+import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
+import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
 import de.gravitex.trainmaster.repo.TrainRunRepository;
 
@@ -23,10 +30,16 @@ public class TrackService implements ITrackService {
 	TrackRepository trackRepository;
 	
 	@Autowired
+	StationRepository stationRepository;
+	
+	@Autowired
 	RailItemSequenceMembershipRepository railItemSequenceMembershipRepository;
 	
 	@Autowired
 	RailItemSequenceRepository railItemSequenceRepository;
+	
+	@Autowired
+	RailItemRepository railItemRepository;
 
 	@Override
 	public String getTrackSequenceAsString(String trackNumber) {
@@ -40,6 +53,33 @@ public class TrackService implements ITrackService {
 			}
 		}
 		// return "moo123_" + trainRunRepository.findAll().size();
+		return result;
+	}
+
+	@Override
+	public StationsAndTracksAndWaggonsDTO getStationsAndTracksAndWaggonsDTO() {
+		
+		StationsAndTracksAndWaggonsDTO result = new StationsAndTracksAndWaggonsDTO();
+		
+		StationDTO stationDTO = null;
+		TrackDTO trackDTO = null;
+		RailItemDTO railItemDTO = null;
+		for (Station station : stationRepository.findAll()) {
+			stationDTO = new StationDTO();
+			stationDTO.fillValues(station);
+			result.addStation(stationDTO);
+			for (Track track : trackRepository.findByStation(station)) {
+				trackDTO = new TrackDTO();
+				trackDTO.fillValues(track);
+				result.addTrack(stationDTO, trackDTO);
+				for (RailItemSequenceMembership railItemSequenceMembership : railItemRepository.findByTrack(track)) {
+					railItemDTO = new RailItemDTO();
+					railItemDTO.fillValues(railItemSequenceMembership.getRailItem());
+					result.addRailItem(stationDTO, trackDTO, railItemDTO);	
+				}
+			}
+		}
+		
 		return result;
 	}
 }

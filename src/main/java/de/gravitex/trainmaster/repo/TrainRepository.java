@@ -8,4 +8,5 @@ import de.gravitex.trainmaster.entity.Train;
 @Repository
 public interface TrainRepository extends JpaRepository<Train, Long> {
 
+	Train findByTrainNumber(String trainNumber);
 }

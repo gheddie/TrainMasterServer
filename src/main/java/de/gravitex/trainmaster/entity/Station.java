@@ -9,8 +9,4 @@ import lombok.Data;
 public class Station extends BaseEntity {
 	
 	private String stationName;
-
-	public Station(String aStationName) {
-		this.stationName = aStationName;
-	}
 }

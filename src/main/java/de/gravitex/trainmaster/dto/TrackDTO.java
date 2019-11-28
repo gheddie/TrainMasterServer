@@ -3,10 +3,11 @@ package de.gravitex.trainmaster.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.gravitex.trainmaster.entity.Track;
 import lombok.Data;
 
 @Data
-public class TrackDTO implements ServerDTO {
+public class TrackDTO  extends SingleEntityServerDTO<Track> {
 
 	private List<RailItemDTO> railItemDTOs;
 	
@@ -17,5 +18,10 @@ public class TrackDTO implements ServerDTO {
 			railItemDTOs = new ArrayList<RailItemDTO>();
 		}
 		railItemDTOs.add(railItemDTO);
+	}
+
+	@Override
+	public void fillValues(Track entity) {
+		setTrackNumber(entity.getTrackNumber());
 	}
 }

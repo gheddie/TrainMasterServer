@@ -2,6 +2,9 @@ package de.gravitex.trainmaster.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
+
+import com.sun.istack.NotNull;
 
 import lombok.Data;
 
@@ -11,7 +14,11 @@ public class Train extends RailItemSequenceHolder {
 	
 	@OneToOne
 	public RailItemSequence locomotives;
+	
+	@NotBlank
+	public String trainNumber;
 
+	@NotNull
 	@OneToOne
 	public RailItemSequence waggonSequence;
 	

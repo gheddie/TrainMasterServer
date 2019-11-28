@@ -1,12 +1,10 @@
 package de.gravitex.trainmaster;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
 import de.gravitex.trainmaster.dlh.EntityHelper;
-import de.gravitex.trainmaster.entity.Locomotive;
 import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.StationInfo;
@@ -14,8 +12,6 @@ import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
 import de.gravitex.trainmaster.entity.TrainRunSection;
-import de.gravitex.trainmaster.entity.Waggon;
-import de.gravitex.trainmaster.entity.enumeration.TrainRunState;
 import de.gravitex.trainmaster.helper.RailItemSequenceBuilder;
 import de.gravitex.trainmaster.logic.TrainRunner;
 import de.gravitex.trainmaster.manager.TrackManager;
@@ -41,7 +37,8 @@ public class TrainRunTest {
 				.withRailItems(EntityHelper.makeLocomotive("LOCO1"), EntityHelper.makeLocomotive("LOCO2")).build();
 
 		// set up station A with waggons
-		Track trackExitS1 = new Track("TExitS1");
+		Track trackExitS1 = new Track();
+		trackExitS1.setTrackNumber("TExitS1");
 		TrackManager.populateTrack(trackExitS1, locomotiveSequence, waggonSequenceAForExit, waggonSequenceBForExit);
 
 		assertEquals(TrackManager.getRailItemIdetifiersAsString(trackExitS1),
@@ -50,9 +47,14 @@ public class TrainRunTest {
 		TrainRunner trainRunner = new TrainRunner();
 		Train aTrain = new Train();
 		TrainRun trainRun = new TrainRun();
-		StationInfo stationFrom = new StationInfo(new Station("S1"), null, trackExitS1);
-		Track trackEntryS2 = new Track("TEntryS2");
-		StationInfo stationTo = new StationInfo(new Station("S2"), trackEntryS2, null);
+		Station stationS1 = new Station();
+		stationS1.setStationName("S1");
+		StationInfo stationFrom = new StationInfo(stationS1, null, trackExitS1);
+		Track trackEntryS2 = new Track();
+		trackEntryS2.setTrackNumber("TEntryS2");
+		Station stationS2 = new Station();
+		stationS2.setStationName("S2");
+		StationInfo stationTo = new StationInfo(stationS2, trackEntryS2, null);
 		trainRun.getTrainRunSections().add(new TrainRunSection(stationFrom, stationTo));
 		aTrain.setTrainRun(trainRun);
 		trainRunner.withArguments(trackExitS1, locomotiveSequence, waggonSequenceAForExit, trackEntryS2, aTrain);
@@ -83,7 +85,8 @@ public class TrainRunTest {
 				.withRailItems(EntityHelper.makeLocomotive("LOCO1"), EntityHelper.makeLocomotive("LOCO2")).build();
 
 		// set up station A with waggons
-		Track trackExitS1 = new Track("TExitS1");
+		Track trackExitS1 = new Track();
+		trackExitS1.setTrackNumber("TExitS1");
 		TrackManager.populateTrack(trackExitS1, locomotiveSequence, waggonSequenceAForExit, waggonSequenceBForExit);
 
 		assertEquals(TrackManager.getRailItemIdetifiersAsString(trackExitS1),
@@ -92,10 +95,15 @@ public class TrainRunTest {
 		Train train = new Train();
 		train.setWaggonSequence(waggonSequenceAForExit);
 
-		Track trackEntryS2 = new Track("TEntryS2");
+		Track trackEntryS2 = new Track();
+		trackEntryS2.setTrackNumber("TEntryS2");
 
-		TrainRun trainRun = TrainRun.fromStationNames(new StationInfo(new Station("S1"), null, trackExitS1),
-				new StationInfo(new Station("S2"), trackEntryS2, null));
+		Station stationS1 = new Station();
+		stationS1.setStationName("S1");
+		Station stationS2 = new Station();
+		stationS2.setStationName("S2");
+		TrainRun trainRun = TrainRun.fromStationNames(new StationInfo(stationS1, null, trackExitS1),
+				new StationInfo(stationS2, trackEntryS2, null));
 		train.setTrainRun(trainRun);
 
 		train = TrainRunManager.prepareTrain(train, locomotiveSequence, waggonSequenceAForExit);

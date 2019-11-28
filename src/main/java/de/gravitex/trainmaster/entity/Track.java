@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -22,15 +23,11 @@ public class Track extends RailItemSequenceHolder implements PositionedItem {
 	@OneToOne
 	private Station station;
 	
+	@NotBlank
 	private String trackNumber;
 	
 	@OneToMany
 	private List<RailItemSequence> railItemSequences = new ArrayList<>();
-	
-	public Track(String name) {
-		super();
-		this.trackNumber = name;
-	}
 	
 	@Override
 	@PrePersist

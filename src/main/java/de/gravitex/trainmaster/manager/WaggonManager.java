@@ -12,7 +12,7 @@ public class WaggonManager {
 
 	public static RailItemSequence addWaggonToSequence(RailItemSequence railItemSequence, RailItem... railItems) {
 		if (railItemSequence == null) {
-			railItemSequence = new RailItemSequence(0);
+			railItemSequence = new RailItemSequence();
 		}
 		for (RailItem railItem : railItems) {
 			RailItemSequenceMembership railItemSequenceMembership = new RailItemSequenceMembership();
@@ -31,7 +31,8 @@ public class WaggonManager {
 	}
 
 	public static RailItemSequence reverseWaggonSequence(RailItemSequence railItemSequence) {
-		RailItemSequence reversedSequence = new RailItemSequence(0);
+		RailItemSequence reversedSequence = new RailItemSequence();
+		reversedSequence.setOrdinalPosition(0);
 		int removeIndex = railItemSequence.getRailItemSequenceMemberships().size() - 1;
 		for (int counter = 0; counter < railItemSequence.getRailItemSequenceMemberships().size(); counter++) {
 			RailItemSequenceMembership membership = railItemSequence.getRailItemSequenceMemberships().get(removeIndex);

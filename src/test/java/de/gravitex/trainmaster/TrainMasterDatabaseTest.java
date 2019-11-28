@@ -70,10 +70,12 @@ public class TrainMasterDatabaseTest {
 	@Test
 	public void testTrainRunner() throws Exception {
 
-		Station station1 = new Station("S1");
+		Station station1 = new Station();
+		station1.setStationName("S1");
 		stationRepository.save(station1);
 
-		Station station2 = new Station("S2");
+		Station station2 = new Station();
+		station2.setStationName("S2");
 		stationRepository.save(station2);
 
 		Locomotive locomotive1 = EntityHelper.makeLocomotive("L1");
@@ -94,25 +96,32 @@ public class TrainMasterDatabaseTest {
 		Waggon waggon567 = EntityHelper.makeWaggon("567");
 		railItemRepository.save(waggon567);
 
-		Track track1Station1 = new Track("track1Station1");
+		Track track1Station1 = new Track();
+		track1Station1.setTrackNumber("track1Station1");
 		track1Station1.setStation(station1);
 		trackRepository.save(track1Station1);
 
-		Track track2Station1 = new Track("track2Station1");
+		Track track2Station1 = new Track();
+		track2Station1.setTrackNumber("track2Station1");
 		track2Station1.setStation(station1);
 		trackRepository.save(track2Station1);
 
-		Track track1Station2 = new Track("track1Station2");
+		Track track1Station2 = new Track();
+		track1Station2.setTrackNumber("track1Station2");
 		track1Station2.setStation(station2);
 		trackRepository.save(track1Station2);
 
-		RailItemSequence seqLocos = new RailItemSequence(0);
+		RailItemSequence seqLocos = new RailItemSequence();
+		seqLocos.setOrdinalPosition(0);
 		railItemSequenceRepository.save(seqLocos);
-		RailItemSequence seqTrack1Station1 = new RailItemSequence(1);
+		RailItemSequence seqTrack1Station1 = new RailItemSequence();
+		seqLocos.setOrdinalPosition(1);
 		railItemSequenceRepository.save(seqTrack1Station1);
-		RailItemSequence seqTrack2Station1 = new RailItemSequence(0);
+		RailItemSequence seqTrack2Station1 = new RailItemSequence();
+		seqLocos.setOrdinalPosition(0);
 		railItemSequenceRepository.save(seqTrack2Station1);
-		RailItemSequence seqTrack1Station2 = new RailItemSequence(0);
+		RailItemSequence seqTrack1Station2 = new RailItemSequence();
+		seqLocos.setOrdinalPosition(0);
 		railItemSequenceRepository.save(seqTrack1Station2);
 
 		putRailItemToTrack(locomotive1, track1Station1, seqLocos, 0);
@@ -140,6 +149,7 @@ public class TrainMasterDatabaseTest {
 		TrainRunSection sec1 = new TrainRunSection(stationInfo1, stationInfo2);
 		trainRunSectionRepository.save(sec1);
 		Train train = new Train();
+		train.setTrainNumber("123");
 		TrainRun trainRun = new TrainRun();
 		trainRunRepository.save(trainRun);
 		train.setTrainRun(trainRun);

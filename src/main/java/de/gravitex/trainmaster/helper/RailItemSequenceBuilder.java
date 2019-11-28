@@ -16,7 +16,8 @@ public class RailItemSequenceBuilder {
 	}
 
 	public RailItemSequence build() {
-		RailItemSequence result = new RailItemSequence(0);
+		RailItemSequence result = new RailItemSequence();
+		result.setOrdinalPosition(0);
 		RailItemSequenceMembership membership = null;
 		for (RailItem railItem : railItems) {
 			membership = new RailItemSequenceMembership();
