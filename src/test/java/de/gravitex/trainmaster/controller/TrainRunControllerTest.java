@@ -1,8 +1,6 @@
 package de.gravitex.trainmaster.controller;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +46,8 @@ public class TrainRunControllerTest {
 		ObjectMapper mapper = new ObjectMapper();
 		StationsAndTracksAndWaggonsDTO stationAndTracksAndWaggons = mapper.readValue(json,
 				StationsAndTracksAndWaggonsDTO.class);
-		// resultActions.andExpect(content().string(equalTo("OK")));
-		String trackWaggonsAsString = stationAndTracksAndWaggons.getTrackWaggonsAsString("S2", "track1Station2");
-		Assert.isTrue(trackWaggonsAsString.equals("[track1Station1] --> [L1::0/0][123::1/0][234::1/1]"));
+		String actualSeqTrack1Station1 = stationAndTracksAndWaggons.getTrackWaggonsAsString("S1", "track1Station1");
+		Assert.isTrue(actualSeqTrack1Station1.equals("[track1Station1] --> [L1][123][234]"));
 	}
 
 	@Test

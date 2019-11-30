@@ -1,5 +1,6 @@
 package de.gravitex.trainmaster.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.gravitex.trainmaster.common.DataGrid;
+import de.gravitex.trainmaster.common.DataGridConfiguration;
 import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dlh.EntityHelper;
 import de.gravitex.trainmaster.dlh.SimpleTrackRenderer;
@@ -24,7 +27,10 @@ import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
+import de.gravitex.trainmaster.entity.Waggon;
 import de.gravitex.trainmaster.repo.RailItemRepository;
+import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
+import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.StationInfoRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
 import de.gravitex.trainmaster.repo.TrainRepository;
@@ -45,6 +51,9 @@ public class TrainRunController {
 
 	@Autowired
 	private RailItemRepository railItemRepository;
+	
+	@Autowired
+	private RailItemSequenceMembershipRepository railItemSequenceMembershipRepository;
 
 	@Autowired
 	private TrainRepository trainRepository;
@@ -210,31 +219,43 @@ public class TrainRunController {
 
 	@Transactional
 	@RequestMapping(ServerMappings.TrainRun.RUN_TRAIN)
-	public ResponseEntity<StationsAndTracksAndWaggonsDTO> runTrain(@RequestParam(value = "trainNumber") String trainNumber) {
-		
-		Train train = trainRepository.findByTrainNumber(trainNumber);
-		
+	public ResponseEntity<StationsAndTracksAndWaggonsDTO> runTrain(
+			@RequestParam(value = "trainNumber") String trainNumber) {
+
+		// ---
+
 		/*
-		if (train == null) {
-			return new ResponseEntity<StationsAndTracksAndWaggonsDTO>(new StationsAndTracksAndWaggonsDTO(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
-		if (train.getLocomotives() == null) {
-			return new ResponseEntity<StationsAndTracksAndWaggonsDTO>(new StationsAndTracksAndWaggonsDTO(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		List<String> headers = new ArrayList<String>();
+		headers.add("waggonNumber");
 		*/
+		new DataGrid<RailItemSequenceMembership>().withConfiguration(DataGridConfiguration.fromValues(null))
+				.print(railItemSequenceMembershipRepository.findAll());
+
+		// ---
+
+		Train train = trainRepository.findByTrainNumber(trainNumber);
+
+		/*
+		 * if (train == null) { return new
+		 * ResponseEntity<StationsAndTracksAndWaggonsDTO>(new
+		 * StationsAndTracksAndWaggonsDTO(), HttpStatus.INTERNAL_SERVER_ERROR); }
+		 * 
+		 * if (train.getLocomotives() == null) { return new
+		 * ResponseEntity<StationsAndTracksAndWaggonsDTO>(new
+		 * StationsAndTracksAndWaggonsDTO(), HttpStatus.INTERNAL_SERVER_ERROR); }
+		 */
 
 		System.out.println("running train: " + trainNumber);
 
 		// run train
 		/*
-		TrainRunner trainRunner = new TrainRunner();
-		trainRunner.withArguments(track1Station1, seqLocos, seqTrack1Station1, track1Station2, train);
-		trainRunner.depart();
-		renderTracksAndWaggons("AFTER DEPART");
-		String trackSequence = productService.getTrackSequenceAsString(trackNumber);
-		return new ResponseEntity<String>(trackSequence, HttpStatus.OK);
-		*/
+		 * TrainRunner trainRunner = new TrainRunner();
+		 * trainRunner.withArguments(track1Station1, seqLocos, seqTrack1Station1,
+		 * track1Station2, train); trainRunner.depart();
+		 * renderTracksAndWaggons("AFTER DEPART"); String trackSequence =
+		 * productService.getTrackSequenceAsString(trackNumber); return new
+		 * ResponseEntity<String>(trackSequence, HttpStatus.OK);
+		 */
 
 		StationsAndTracksAndWaggonsDTO result = trackService.getStationsAndTracksAndWaggonsDTO();
 		return new ResponseEntity<StationsAndTracksAndWaggonsDTO>(result, HttpStatus.OK);

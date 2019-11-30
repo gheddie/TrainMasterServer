@@ -32,6 +32,7 @@ import de.gravitex.trainmaster.repo.TrainRepository;
 import de.gravitex.trainmaster.repo.TrainRunRepository;
 import de.gravitex.trainmaster.repo.TrainRunSectionRepository;
 import de.gravitex.trainmaster.repo.WaggonRepository;
+import de.gravitex.trainmaster.util.TablePrinter;
 
 @RestController
 public class TestDataController {
@@ -113,14 +114,16 @@ public class TestDataController {
 
 		RailItemSequence seqLocos = new RailItemSequence();
 		seqLocos.setOrdinalPosition(0);
-		
 		railItemSequenceRepository.save(seqLocos);
+		
 		RailItemSequence seqTrack1Station1 = new RailItemSequence();
-		seqLocos.setOrdinalPosition(1);
+		seqTrack1Station1.setOrdinalPosition(1);
 		railItemSequenceRepository.save(seqTrack1Station1);
+		
 		RailItemSequence seqTrack2Station1 = new RailItemSequence();
 		seqTrack2Station1.setOrdinalPosition(0);
 		railItemSequenceRepository.save(seqTrack2Station1);
+		
 		RailItemSequence seqTrack1Station2 = new RailItemSequence();
 		seqTrack1Station2.setOrdinalPosition(0);
 		railItemSequenceRepository.save(seqTrack1Station2);
@@ -148,6 +151,10 @@ public class TestDataController {
 		train.setTrainRun(trainRun);
 		trainRun.getTrainRunSections().add(sec1);
 		trainRepository.save(train);
+		
+		// ---
+		
+		new TablePrinter().print(trackRepository.findAll());
 	}
 
 	private void putRailItemToTrack(RailItem railItem, Track track, RailItemSequence railItemSequence,
