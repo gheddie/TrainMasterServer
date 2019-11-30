@@ -49,8 +49,10 @@ public class StationsAndTracksAndWaggonsDTO implements ServerDTO {
 			return "";
 		}
 		List<String> identifiers = new ArrayList<String>();
-		for (RailItemDTO railItemDTO : trackDTO.getRailItemDTOs()) {
-			identifiers.add(railItemDTO.getIdentifier());
+		if (trackDTO.getRailItemDTOs() != null) {
+			for (RailItemDTO railItemDTO : trackDTO.getRailItemDTOs()) {
+				identifiers.add(railItemDTO.getIdentifier());
+			}			
 		}
 		return RailItemSequcenFormatter.format(trackNumber, identifiers);
 	}

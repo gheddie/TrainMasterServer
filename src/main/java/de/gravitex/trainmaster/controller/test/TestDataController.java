@@ -111,6 +111,11 @@ public class TestDataController {
 		track1Station2.setTrackNumber("track1Station2");
 		track1Station2.setStation(station2);
 		trackRepository.save(track1Station2);
+		
+		Track track2Station2 = new Track();
+		track2Station2.setTrackNumber("track2Station2");
+		track2Station2.setStation(station2);
+		trackRepository.save(track2Station2);
 
 		RailItemSequence seqLocos = new RailItemSequence();
 		seqLocos.setOrdinalPosition(0);

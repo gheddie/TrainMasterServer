@@ -49,6 +49,7 @@ public class TrainRunControllerTest {
 		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S1", "track1Station1").equals("[track1Station1]::[L1][123][234]"));
 		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S1", "track2Station1").equals("[track2Station1]::[345]"));
 		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S2", "track1Station2").equals("[track1Station2]::[456][567]"));
+		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S2", "track2Station2").equals("[track2Station2]::#BLANK#"));
 	}
 
 	@Test
