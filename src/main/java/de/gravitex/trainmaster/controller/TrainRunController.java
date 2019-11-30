@@ -1,6 +1,5 @@
 package de.gravitex.trainmaster.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -18,19 +17,14 @@ import de.gravitex.trainmaster.common.DataGridConfiguration;
 import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dlh.EntityHelper;
 import de.gravitex.trainmaster.dlh.SimpleTrackRenderer;
-import de.gravitex.trainmaster.dto.RailItemDTO;
-import de.gravitex.trainmaster.dto.StationDTO;
 import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
-import de.gravitex.trainmaster.dto.TrackDTO;
 import de.gravitex.trainmaster.dto.test.GreetingDTO;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
-import de.gravitex.trainmaster.entity.Waggon;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
-import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.StationInfoRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
 import de.gravitex.trainmaster.repo.TrainRepository;
@@ -171,50 +165,6 @@ public class TrainRunController {
 		 */
 
 		return null;
-	}
-
-	/*
-	 * private void putRailItemToTrack(RailItem railItem, Track track,
-	 * RailItemSequence railItemSequence, int ordinalPosition) {
-	 * 
-	 * System.out.println("putWaggonToTrack :: waggon = " + railItem.getIdentifier()
-	 * + ", track = " + track.getTrackNumber() + ", station = " +
-	 * track.getStation().getStationName());
-	 * 
-	 * railItemSequence.setRailItemSequenceHolder(track);
-	 * railItemSequenceRepository.save(railItemSequence);
-	 * 
-	 * RailItemSequenceMembership sequenceMembership = new
-	 * RailItemSequenceMembership(); sequenceMembership.setRailItem(railItem);
-	 * sequenceMembership.setOrdinalPosition(ordinalPosition);
-	 * sequenceMembership.setRailItemSequence(railItemSequence);
-	 * railItemSequenceMembershipRepository.save(sequenceMembership); }
-	 */
-
-	@Transactional
-	@RequestMapping(ServerMappings.TrainRun.TRACKPOPULATION)
-	public ResponseEntity<StationsAndTracksAndWaggonsDTO> trackpopulation(
-			@RequestParam(value = "stationName") String stationName) {
-		StationsAndTracksAndWaggonsDTO result = new StationsAndTracksAndWaggonsDTO();
-		StationDTO stationDTO = new StationDTO();
-		stationDTO.setStationName("S1");
-		result.addStation(stationDTO);
-		TrackDTO trackDTO1 = new TrackDTO();
-		trackDTO1.setTrackNumber("T1");
-		TrackDTO trackDTO2 = new TrackDTO();
-		trackDTO2.setTrackNumber("T2");
-		result.addTrack(stationDTO, trackDTO1);
-		result.addTrack(stationDTO, trackDTO2);
-		RailItemDTO railItemDTOW1 = new RailItemDTO();
-		railItemDTOW1.setIdentifier("W1");
-		RailItemDTO railItemDTOW2 = new RailItemDTO();
-		railItemDTOW2.setIdentifier("W2");
-		RailItemDTO railItemDTOW3 = new RailItemDTO();
-		railItemDTOW3.setIdentifier("W3");
-		result.addRailItem(stationDTO, trackDTO1, railItemDTOW1);
-		result.addRailItem(stationDTO, trackDTO1, railItemDTOW2);
-		result.addRailItem(stationDTO, trackDTO2, railItemDTOW3);
-		return new ResponseEntity<StationsAndTracksAndWaggonsDTO>(result, HttpStatus.OK);
 	}
 
 	@Transactional

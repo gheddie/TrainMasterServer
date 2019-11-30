@@ -13,7 +13,7 @@ import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
 import de.gravitex.trainmaster.entity.TrainRunSection;
 import de.gravitex.trainmaster.helper.RailItemSequenceBuilder;
-import de.gravitex.trainmaster.logic.TrainRunner;
+import de.gravitex.trainmaster.logic.TrainRunSsequencePerformer;
 import de.gravitex.trainmaster.manager.TrackManager;
 import de.gravitex.trainmaster.manager.TrainRunManager;
 import de.gravitex.trainmaster.manager.WaggonManager;
@@ -44,7 +44,7 @@ public class TrainRunTest {
 		assertEquals(TrackManager.getRailItemIdetifiersAsString(trackExitS1),
 				"LOCO1@0#LOCO2@1#WAG1@2#WAG2@3#WAG3@4#WAG4@5#WAG5@6");
 
-		TrainRunner trainRunner = new TrainRunner();
+		TrainRunSsequencePerformer trainRunner = new TrainRunSsequencePerformer();
 		Train aTrain = new Train();
 		TrainRun trainRun = new TrainRun();
 		Station stationS1 = new Station();

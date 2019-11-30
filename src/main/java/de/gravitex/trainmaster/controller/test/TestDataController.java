@@ -118,18 +118,22 @@ public class TestDataController {
 		trackRepository.save(track2Station2);
 
 		RailItemSequence seqLocos = new RailItemSequence();
+		seqLocos.setSequenceIdentifier("seqLocos");
 		seqLocos.setOrdinalPosition(0);
 		railItemSequenceRepository.save(seqLocos);
 		
 		RailItemSequence seqTrack1Station1 = new RailItemSequence();
+		seqTrack1Station1.setSequenceIdentifier("seqTrack1Station1");
 		seqTrack1Station1.setOrdinalPosition(1);
 		railItemSequenceRepository.save(seqTrack1Station1);
 		
 		RailItemSequence seqTrack2Station1 = new RailItemSequence();
+		seqTrack2Station1.setSequenceIdentifier("seqTrack2Station1");
 		seqTrack2Station1.setOrdinalPosition(0);
 		railItemSequenceRepository.save(seqTrack2Station1);
 		
 		RailItemSequence seqTrack1Station2 = new RailItemSequence();
+		seqTrack1Station2.setSequenceIdentifier("seqTrack1Station2");
 		seqTrack1Station2.setOrdinalPosition(0);
 		railItemSequenceRepository.save(seqTrack1Station2);
 

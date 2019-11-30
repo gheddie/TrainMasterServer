@@ -9,15 +9,15 @@ import lombok.Data;
 @Data
 public class TrackDTO  extends SingleEntityServerDTO<Track> {
 
-	private List<RailItemDTO> railItemDTOs;
+	private List<RailItemSequenceDTO> railItemSequenceDTOs;
 	
 	private String trackNumber;
-
-	public void addRailItem(RailItemDTO railItemDTO) {
-		if (railItemDTOs == null) {
-			railItemDTOs = new ArrayList<RailItemDTO>();
+	
+	public void addRailItemSequence(RailItemSequenceDTO railItemSequenceDTO) {
+		if (railItemSequenceDTOs == null) {
+			railItemSequenceDTOs = new ArrayList<RailItemSequenceDTO>();
 		}
-		railItemDTOs.add(railItemDTO);
+		railItemSequenceDTOs.add(railItemSequenceDTO);
 	}
 
 	@Override

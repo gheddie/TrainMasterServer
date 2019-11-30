@@ -4,7 +4,7 @@ import de.gravitex.trainmaster.entity.RailItem;
 import lombok.Data;
 
 @Data
-public class RailItemDTO  extends SingleEntityServerDTO<RailItem> {
+public class RailItemDTO extends SingleEntityServerDTO<RailItem> {
 
 	private String identifier;
 

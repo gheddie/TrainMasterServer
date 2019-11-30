@@ -28,33 +28,60 @@ public class StationsAndTracksAndWaggonsDTO implements ServerDTO {
 		}
 	}
 
-	public void addRailItem(StationDTO stationDTO, TrackDTO trackDTO, RailItemDTO railItemDTO) {
+	public void addRailItemSequence(StationDTO stationDTO, TrackDTO trackDTO, RailItemSequenceDTO railItemSequenceDTO) {
 		for (StationDTO s : stationDTOs) {
 			if (s.equals(stationDTO)) {
 				for (TrackDTO t : s.getTrackDTOs()) {
 					if (t.equals(trackDTO)) {
-						t.addRailItem(railItemDTO);
+						t.addRailItemSequence(railItemSequenceDTO);
 					}
 				}
 			}
 		}
 	}
-	
+
+	public void addRailItem(StationDTO stationDTO, TrackDTO trackDTO, RailItemSequenceDTO railItemSequenceDTO,
+			RailItemDTO railItemDTO) {
+		for (StationDTO s : stationDTOs) {
+			if (s.equals(stationDTO)) {
+				for (TrackDTO t : s.getTrackDTOs()) {
+					if (t.equals(trackDTO)) {
+						for (RailItemSequenceDTO ris : t.getRailItemSequenceDTOs()) {
+							if (ris.equals(railItemSequenceDTO)) {
+								ris.addRailItem(railItemDTO);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@JsonIgnore
 	public String getTrackWaggonsAsString(String stationName, String trackNumber) {
-		
+
 		StationDTO station = findStation(stationName);
 		TrackDTO trackDTO = findTrack(station, trackNumber);
 		if (trackDTO == null) {
 			return "";
 		}
-		List<String> identifiers = new ArrayList<String>();
-		if (trackDTO.getRailItemDTOs() != null) {
-			for (RailItemDTO railItemDTO : trackDTO.getRailItemDTOs()) {
-				identifiers.add(railItemDTO.getIdentifier());
-			}			
+		List<String> sequenceStrings = new ArrayList<String>();
+		if (trackDTO.getRailItemSequenceDTOs() != null) {
+			for (RailItemSequenceDTO railItemSequenceDTO : trackDTO.getRailItemSequenceDTOs()) {
+				sequenceStrings.add(formatSequence(railItemSequenceDTO));
+			}
 		}
-		return RailItemSequcenFormatter.format(trackNumber, identifiers);
+		return RailItemSequcenFormatter.format(trackNumber, sequenceStrings);
+	}
+
+	@JsonIgnore
+	private String formatSequence(RailItemSequenceDTO railItemSequenceDTO) {
+		String result = railItemSequenceDTO.getSequenceIdentifier() + "{";
+		for (RailItemDTO railItemDTO : railItemSequenceDTO.getRailItemDTOs()) {
+			result += "["+railItemDTO.getIdentifier()+"]";					
+		}
+		result += "}";
+		return result;
 	}
 
 	private TrackDTO findTrack(StationDTO station, String trackNumber) {

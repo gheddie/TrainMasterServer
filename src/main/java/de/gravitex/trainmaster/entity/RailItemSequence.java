@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.ForeignKey;
@@ -22,6 +23,9 @@ public class RailItemSequence extends BaseEntity implements PositionedItem {
 	@NotNull
 	@Column(name = "ordinal_position")
 	private Integer ordinalPosition;
+	
+	@NotBlank
+	private String sequenceIdentifier;
 	
 	@ForeignKey(name = "rail_item_sequence_holder_id")
 	@OneToOne

@@ -1,6 +1,7 @@
 package de.gravitex.trainmaster.util;
 
 import de.gravitex.trainmaster.dto.RailItemDTO;
+import de.gravitex.trainmaster.dto.RailItemSequenceDTO;
 import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
 import de.gravitex.trainmaster.dto.StationDTO;
 import de.gravitex.trainmaster.dto.TrackDTO;
@@ -14,8 +15,10 @@ public class ObjectHelper {
 			System.out.println("------------------------------------------------------------------------");
 			for (TrackDTO t : s.getTrackDTOs()) {
 				String itemString = "";
-				for (RailItemDTO r : t.getRailItemDTOs()) {
-					itemString += "[" + r.getIdentifier() + "]";
+				for (RailItemSequenceDTO ris : t.getRailItemSequenceDTOs()) {
+					for (RailItemDTO ri : ris.getRailItemDTOs()) {
+						itemString += "[" + ri.getIdentifier() + "]";						
+					}
 				}
 				System.out.println(
 						"[TRACK::" + t.getTrackNumber() + "] " + " " + itemString);

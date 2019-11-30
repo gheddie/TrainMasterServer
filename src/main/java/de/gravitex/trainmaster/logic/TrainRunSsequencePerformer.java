@@ -7,7 +7,7 @@ import de.gravitex.trainmaster.manager.TrainRunManager;
 import lombok.Data;
 
 @Data
-public class TrainRunner {
+public class TrainRunSsequencePerformer {
 
 	private Track entryTrack;
 
@@ -16,19 +16,9 @@ public class TrainRunner {
 	public void withArguments(Track exitTrack, RailItemSequence locomotiveSequence,
 			RailItemSequence waggonSequenceForExit, Track aEntryTrack, Train aTrain) {
 
-		// train = new Train();
-
 		train = aTrain;
 		train.setWaggonSequence(waggonSequenceForExit);
-
 		entryTrack = aEntryTrack;
-
-		/*
-		 * TrainRun trainRun = TrainRun.fromStationNames(new StationInfo(new
-		 * Station("S1"), null, exitTrack), new StationInfo(new Station("S2"),
-		 * entryTrack, null)); train.setTrainRun(trainRun);
-		 */
-
 		train = TrainRunManager.prepareTrain(train, locomotiveSequence, waggonSequenceForExit);
 	}
 

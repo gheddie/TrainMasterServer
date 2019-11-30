@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
+import de.gravitex.trainmaster.logic.TrainRunSsequencePerformer;
 import de.gravitex.trainmaster.util.ObjectHelper;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,12 +28,12 @@ public class TrainRunControllerTest {
 	 * 
 	 * S1
 	 * ------------------------------------------------------
-	 * track1Station1 ---> [L1][123][234] 
-	 * track2Station1 ---> [345]
+	 * track1Station1 ---> seqLocos{[L1]}seqTrack1Station1{[123][234]} 
+	 * track2Station1 ---> seqTrack2Station1{[345]}
 	 *
 	 * S2
 	 * ------------------------------------------------------
-	 * track1Station2 ---> [456][567]
+	 * track1Station2 ---> seqTrack1Station2{[456][567]}
 	 * 
 	 * @throws Exception
 	 */
@@ -44,42 +45,22 @@ public class TrainRunControllerTest {
 				.perform(get(ServerMappings.TrainRun.RUN_TRAIN).param("trainNumber", "ABC-DEF-GHI"));
 		String json = resultActions.andReturn().getResponse().getContentAsString();
 		ObjectMapper mapper = new ObjectMapper();
-		StationsAndTracksAndWaggonsDTO stationAndTracksAndWaggons = mapper.readValue(json,
+		StationsAndTracksAndWaggonsDTO sataw = mapper.readValue(json,
 				StationsAndTracksAndWaggonsDTO.class);
-		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S1", "track1Station1").equals("[track1Station1]::[L1][123][234]"));
-		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S1", "track2Station1").equals("[track2Station1]::[345]"));
-		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S2", "track1Station2").equals("[track1Station2]::[456][567]"));
-		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S2", "track2Station2").equals("[track2Station2]::#BLANK#"));
-	}
-
-	@Test
-	public void testStationAndTracks() throws Exception {
 		
+		assertTrackSequence(sataw, "S1", "track1Station1", "[track1Station1]::seqLocos{[L1]}seqTrack1Station1{[123][234]}");
+		assertTrackSequence(sataw, "S1", "track2Station1", "[track2Station1]::seqTrack2Station1{[345]}");
+		assertTrackSequence(sataw, "S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}");
+		assertTrackSequence(sataw, "S2", "track2Station2", "[track2Station2]::#BLANK#");
+	
 		/*
-		 * ResultActions result =
-		 * mockMvc.perform(get(ServerMappings.TRACKPOPULATION).param("stationName",
-		 * "ssssssssssss"));
-		 * result.andExpect(content().string(containsString("Hello, Meeting!")));
-		 */
-		
-		ResultActions result = mockMvc
-				.perform(get(ServerMappings.TrainRun.TRACKPOPULATION).param("stationName", "ssssssssssss"));
-		String json = result.andReturn().getResponse().getContentAsString();
-		ObjectMapper mapper = new ObjectMapper();
-		StationsAndTracksAndWaggonsDTO stationAndTracksAndWaggons = mapper.readValue(json,
-				StationsAndTracksAndWaggonsDTO.class);
-		ObjectHelper.renderStation(stationAndTracksAndWaggons);
+		TrainRunSsequencePerformer performer = new TrainRunSsequencePerformer().withArguments(trackExitS1, locomotiveSequence, waggonSequenceAForExit, trackEntryS2, aTrain);
+		performer.depart();
+		*/
 	}
-
-	/*
-	@Test
-	public void testGreeting() throws Exception {
-		mockMvc.perform(get(ServerMappings.TrainRun.MEETING))
-				.andExpect(content().string(containsString("Hello, Meeting!")));
-		mockMvc.perform(get(ServerMappings.TrainRun.GREETING))
-				.andExpect(content().string(containsString("Hello, World!")));
-		mockMvc.perform(get(ServerMappings.TrainRun.TRAIN).param("trackNumber", "track2Station1"))
-				.andExpect(content().string(containsString("123-456-789")));
+	
+	private void assertTrackSequence(StationsAndTracksAndWaggonsDTO stationAndTracksAndWaggons, String station, String track, String expectedTrackSequence) {
+		String actualTrackWaggonsAsString = stationAndTracksAndWaggons.getTrackWaggonsAsString(station, track);
+		Assert.isTrue(actualTrackWaggonsAsString.equals(expectedTrackSequence));
 	}
-	*/
 }

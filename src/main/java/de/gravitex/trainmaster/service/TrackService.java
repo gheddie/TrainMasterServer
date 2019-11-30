@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.gravitex.trainmaster.dto.RailItemDTO;
+import de.gravitex.trainmaster.dto.RailItemSequenceDTO;
 import de.gravitex.trainmaster.dto.StationDTO;
 import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
 import de.gravitex.trainmaster.dto.TrackDTO;
@@ -62,6 +63,7 @@ public class TrackService implements ITrackService {
 		
 		StationDTO stationDTO = null;
 		TrackDTO trackDTO = null;
+		RailItemSequenceDTO railItemSequenceDTO = null;
 		RailItemDTO railItemDTO = null;
 		for (Station station : stationRepository.findAll()) {
 			stationDTO = new StationDTO();
@@ -71,10 +73,15 @@ public class TrackService implements ITrackService {
 				trackDTO = new TrackDTO();
 				trackDTO.fillValues(track);
 				result.addTrack(stationDTO, trackDTO);
-				for (RailItemSequenceMembership railItemSequenceMembership : railItemRepository.findByTrack(track)) {
-					railItemDTO = new RailItemDTO();
-					railItemDTO.fillValues(railItemSequenceMembership.getRailItem());
-					result.addRailItem(stationDTO, trackDTO, railItemDTO);	
+				for (RailItemSequence railItemSequence : railItemSequenceRepository.findByRailItemSequenceHolder(track)) {
+					railItemSequenceDTO = new RailItemSequenceDTO();
+					railItemSequenceDTO.fillValues(railItemSequence);
+					result.addRailItemSequence(stationDTO, trackDTO, railItemSequenceDTO);
+					for (RailItemSequenceMembership railItemSequenceMembership : railItemSequenceMembershipRepository.findByRailItemSequence(railItemSequence)) {
+						railItemDTO = new RailItemDTO();
+						railItemDTO.fillValues(railItemSequenceMembership.getRailItem());
+						result.addRailItem(stationDTO, trackDTO, railItemSequenceDTO, railItemDTO);	
+					}
 				}
 			}
 		}
