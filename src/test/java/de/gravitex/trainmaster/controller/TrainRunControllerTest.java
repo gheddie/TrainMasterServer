@@ -46,8 +46,9 @@ public class TrainRunControllerTest {
 		ObjectMapper mapper = new ObjectMapper();
 		StationsAndTracksAndWaggonsDTO stationAndTracksAndWaggons = mapper.readValue(json,
 				StationsAndTracksAndWaggonsDTO.class);
-		String actualSeqTrack1Station1 = stationAndTracksAndWaggons.getTrackWaggonsAsString("S1", "track1Station1");
-		Assert.isTrue(actualSeqTrack1Station1.equals("[track1Station1] --> [L1][123][234]"));
+		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S1", "track1Station1").equals("[track1Station1]::[L1][123][234]"));
+		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S1", "track2Station1").equals("[track2Station1]::[345]"));
+		Assert.isTrue(stationAndTracksAndWaggons.getTrackWaggonsAsString("S2", "track1Station2").equals("[track1Station2]::[456][567]"));
 	}
 
 	@Test

@@ -52,7 +52,7 @@ public class StationsAndTracksAndWaggonsDTO implements ServerDTO {
 		for (RailItemDTO railItemDTO : trackDTO.getRailItemDTOs()) {
 			identifiers.add(railItemDTO.getIdentifier());
 		}
-		return RailItemSequcenFormatter.format(identifiers);
+		return RailItemSequcenFormatter.format(trackNumber, identifiers);
 	}
 
 	private TrackDTO findTrack(StationDTO station, String trackNumber) {
