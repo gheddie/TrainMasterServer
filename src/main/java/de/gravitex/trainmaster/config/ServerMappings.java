@@ -9,12 +9,14 @@ public class ServerMappings {
 	
 	public class TrainRun {
 
-		public static final String MEETING = "/meeting";
-		
-		public static final String GREETING = "/greeting";
-		
 		public static final String TRAIN = "/train";
 		
-		public static final String RUN_TRAIN = "/runtrain";
+		public static final String STATION_DATA = "/stationdata";
+
+		public static final String DEAPRT_TRAIN = "/runtrain";
+
+		public static final String PREPARE_TRAIN = "/preparetrain";
+		
+		public static final String DELETE_ME = "/deleteme";
 	}
 }

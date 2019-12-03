@@ -13,7 +13,7 @@ import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
 import de.gravitex.trainmaster.entity.TrainRunSection;
 import de.gravitex.trainmaster.helper.RailItemSequenceBuilder;
-import de.gravitex.trainmaster.logic.TrainRunSsequencePerformer;
+import de.gravitex.trainmaster.logic.TrainRunSequencePerformer;
 import de.gravitex.trainmaster.manager.TrackManager;
 import de.gravitex.trainmaster.manager.TrainRunManager;
 import de.gravitex.trainmaster.manager.WaggonManager;
@@ -44,18 +44,29 @@ public class TrainRunTest {
 		assertEquals(TrackManager.getRailItemIdetifiersAsString(trackExitS1),
 				"LOCO1@0#LOCO2@1#WAG1@2#WAG2@3#WAG3@4#WAG4@5#WAG5@6");
 
-		TrainRunSsequencePerformer trainRunner = new TrainRunSsequencePerformer();
+		TrainRunSequencePerformer trainRunner = new TrainRunSequencePerformer();
 		Train aTrain = new Train();
 		TrainRun trainRun = new TrainRun();
 		Station stationS1 = new Station();
 		stationS1.setStationName("S1");
-		StationInfo stationFrom = new StationInfo(stationS1, null, trackExitS1);
+		
+		StationInfo stationFrom = new StationInfo();
+		stationFrom.setStation(stationS1);
+		stationFrom.setExitTrack(trackExitS1);
+		
 		Track trackEntryS2 = new Track();
 		trackEntryS2.setTrackNumber("TEntryS2");
 		Station stationS2 = new Station();
 		stationS2.setStationName("S2");
-		StationInfo stationTo = new StationInfo(stationS2, trackEntryS2, null);
-		trainRun.getTrainRunSections().add(new TrainRunSection(stationFrom, stationTo));
+		
+		StationInfo stationTo = new StationInfo();
+		stationTo.setStation(stationS2);
+		stationTo.setEntryTrack(trackEntryS2);
+		
+		TrainRunSection trainRunSection = new TrainRunSection();
+		trainRunSection.setStationFrom(stationFrom);
+		trainRunSection.setStationTo(stationTo);
+		trainRun.getTrainRunSections().add(trainRunSection);
 		aTrain.setTrainRun(trainRun);
 		trainRunner.withArguments(trackExitS1, locomotiveSequence, waggonSequenceAForExit, trackEntryS2, aTrain);
 
@@ -102,8 +113,17 @@ public class TrainRunTest {
 		stationS1.setStationName("S1");
 		Station stationS2 = new Station();
 		stationS2.setStationName("S2");
-		TrainRun trainRun = TrainRun.fromStationNames(new StationInfo(stationS1, null, trackExitS1),
-				new StationInfo(stationS2, trackEntryS2, null));
+		
+		StationInfo stationInfo1 = new StationInfo();
+		stationInfo1.setStation(stationS1);
+		stationInfo1.setExitTrack(trackExitS1);
+		
+		StationInfo stationInfo2 = new StationInfo();
+		stationInfo2.setStation(stationS2);
+		stationInfo2.setEntryTrack(trackEntryS2);
+		
+		TrainRun trainRun = TrainRun.fromStationNames(stationInfo1,
+				stationInfo2);
 		train.setTrainRun(trainRun);
 
 		train = TrainRunManager.prepareTrain(train, locomotiveSequence, waggonSequenceAForExit);

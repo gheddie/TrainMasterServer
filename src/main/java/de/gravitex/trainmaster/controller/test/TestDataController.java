@@ -147,6 +147,7 @@ public class TestDataController {
 		renderTracksAndWaggons("BEFORE");
 
 		// create train with a train run Station 1 -> Station 2
+		/*
 		StationInfo stationInfo1 = new StationInfo(station1, null, track1Station1);
 		stationInfoRepository.save(stationInfo1);
 		StationInfo stationInfo2 = new StationInfo(station2, track1Station2, null);
@@ -160,6 +161,7 @@ public class TestDataController {
 		train.setTrainRun(trainRun);
 		trainRun.getTrainRunSections().add(sec1);
 		trainRepository.save(train);
+		*/
 		
 		// ---
 		

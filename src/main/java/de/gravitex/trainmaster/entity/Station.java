@@ -1,6 +1,7 @@
 package de.gravitex.trainmaster.entity;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
@@ -8,5 +9,6 @@ import lombok.Data;
 @Data
 public class Station extends BaseEntity {
 	
+	@NotBlank
 	private String stationName;
 }

@@ -2,8 +2,7 @@ package de.gravitex.trainmaster.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
@@ -20,11 +19,4 @@ public class StationInfo extends BaseEntity {
 	
 	@OneToOne
 	private Track exitTrack;
-
-	public StationInfo(Station station, Track entryTrack, Track exitTrack) {
-		super();
-		this.station = station;
-		this.entryTrack = entryTrack;
-		this.exitTrack = exitTrack;
-	}
 }
