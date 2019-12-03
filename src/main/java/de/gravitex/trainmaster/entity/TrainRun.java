@@ -18,7 +18,7 @@ public class TrainRun extends BaseEntity implements CheckedEntity {
 	@OneToMany
 	private List<TrainRunSection> trainRunSections = new ArrayList<>();
 
-	public int trainRunSectionIndex = 0;
+	public int actualTrainRunSectionIndex = 0;
 
 	public TrainRunState trainRunState;
 
@@ -40,20 +40,24 @@ public class TrainRun extends BaseEntity implements CheckedEntity {
 	}
 
 	public TrainRunSection getTrainRunSectionByIndex() {
-		return trainRunSections.get(trainRunSectionIndex);
+		return trainRunSections.get(actualTrainRunSectionIndex);
 	}
 
 	public boolean getFinalIndex() {
-		return (trainRunSectionIndex == trainRunSections.size() - 1);
+		return (actualTrainRunSectionIndex == trainRunSections.size() - 1);
 	}
 
 	public void increaseTrainRunSectionIndex() {
-		this.trainRunSectionIndex++;
+		this.actualTrainRunSectionIndex++;
 	}
 
 	@PrePersist
 	@Override
 	public void checkData() {
+		
+		if ((trainRunSections != null) && (trainRunSections.size() > 0)) {
+			int werner = 5;			
+		}
 		
 		/*
 		if ((trainRunSections == null) || (trainRunSections.size() < 1)) {

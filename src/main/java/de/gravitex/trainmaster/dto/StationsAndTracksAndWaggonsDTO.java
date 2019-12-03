@@ -85,6 +85,9 @@ public class StationsAndTracksAndWaggonsDTO implements ServerDTO {
 	}
 
 	private TrackDTO findTrack(StationDTO station, String trackNumber) {
+		if (station == null) {
+			return null;
+		}
 		if (station.getTrackDTOs() == null) {
 			return null;
 		}

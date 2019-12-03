@@ -43,6 +43,9 @@ public class TrainRunControllerTest {
 	 * S2 ------------------------------------------------------ track1Station2 --->
 	 * seqTrack1Station2{[456][567]}
 	 * 
+	 * S3 ------------------------------------------------------ track1Station3 --->
+	 * #BLANK#
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -54,11 +57,17 @@ public class TrainRunControllerTest {
 		// get station data (before)
 		StationsAndTracksAndWaggonsDTO satawBefore = getStationDataFromServer();
 
+		// S1
 		assertTrackSequence(satawBefore, "S1", "track1Station1",
 				"[track1Station1]::seqLocos{[L1]}seqTrack1Station1{[123][234]}");
 		assertTrackSequence(satawBefore, "S1", "track2Station1", "[track2Station1]::seqTrack2Station1{[345]}");
+		
+		// S2
 		assertTrackSequence(satawBefore, "S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}");
 		assertTrackSequence(satawBefore, "S2", "track2Station2", "[track2Station2]::#BLANK#");
+		
+		// S3
+		assertTrackSequence(satawBefore, "S3", "track1Station3", "[track1Station3]::#BLANK#");
 
 		TrainRunDescriptor trainRunDescriptor = new TrainRunDescriptor();
 		List<StationInfoDTO> stationInfoDTOs = new ArrayList<StationInfoDTO>();

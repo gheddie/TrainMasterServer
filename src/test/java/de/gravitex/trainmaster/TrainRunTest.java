@@ -127,7 +127,7 @@ public class TrainRunTest {
 		train.setTrainRun(trainRun);
 
 		train = TrainRunManager.prepareTrain(train, locomotiveSequence, waggonSequenceAForExit);
-		assertEquals(0, train.getTrainRun().getTrainRunSectionIndex());
+		assertEquals(0, train.getTrainRun().getActualTrainRunSectionIndex());
 
 		train = TrainRunManager.departTrain(train);
 		train = TrainRunManager.arriveTrain(train);

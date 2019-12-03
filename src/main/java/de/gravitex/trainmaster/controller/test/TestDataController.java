@@ -78,6 +78,10 @@ public class TestDataController {
 		Station station2 = new Station();
 		station2.setStationName("S2");
 		stationRepository.save(station2);
+		
+		Station station3 = new Station();
+		station3.setStationName("S3");
+		stationRepository.save(station3);
 
 		Locomotive locomotive1 = EntityHelper.makeLocomotive("L1");
 		railItemRepository.save(locomotive1);
@@ -97,6 +101,7 @@ public class TestDataController {
 		Waggon waggon567 = EntityHelper.makeWaggon("567");
 		railItemRepository.save(waggon567);
 
+		// S1
 		Track track1Station1 = new Track();
 		track1Station1.setTrackNumber("track1Station1");
 		track1Station1.setStation(station1);
@@ -107,6 +112,7 @@ public class TestDataController {
 		track2Station1.setStation(station1);
 		trackRepository.save(track2Station1);
 
+		// S2
 		Track track1Station2 = new Track();
 		track1Station2.setTrackNumber("track1Station2");
 		track1Station2.setStation(station2);
@@ -116,6 +122,12 @@ public class TestDataController {
 		track2Station2.setTrackNumber("track2Station2");
 		track2Station2.setStation(station2);
 		trackRepository.save(track2Station2);
+		
+		// S3
+		Track track1Station3 = new Track();
+		track1Station3.setTrackNumber("track1Station3");
+		track1Station3.setStation(station3);
+		trackRepository.save(track1Station3);
 
 		RailItemSequence seqLocos = new RailItemSequence();
 		seqLocos.setSequenceIdentifier("seqLocos");

@@ -147,7 +147,7 @@ public class TrainRunController implements ITrainRunController {
 			 */
 
 			createTrainRunSection(trainRun, stationRepository.findByStationName(stationInfoFrom.getStation()),
-					stationRepository.findByStationName(stationInfoTo.getStation()));
+					stationRepository.findByStationName(stationInfoTo.getStation()), index);
 		}
 
 		// trainRun.getTrainRunSections().add(section);
@@ -155,7 +155,7 @@ public class TrainRunController implements ITrainRunController {
 		return new ResponseEntity<String>("TRAIN_PREPARED", HttpStatus.OK);
 	}
 
-	private void createTrainRunSection(TrainRun trainRun, Station stationFrom, Station stationTo) {
+	private void createTrainRunSection(TrainRun trainRun, Station stationFrom, Station stationTo, int sectionIndex) {
 
 		StationInfo infoFrom = new StationInfo();
 		infoFrom.setStation(stationFrom);
@@ -169,6 +169,13 @@ public class TrainRunController implements ITrainRunController {
 		section.setStationFrom(infoFrom);
 		section.setStationTo(infoTo);
 		section.setTrainRun(trainRun);
+		section.setSectionIndex(sectionIndex);
+		
+		/*
+		trainRun.getTrainRunSections().add(section);
+		trainRunRepository.save(trainRun);
+		*/
+		
 		trainRunSectionRepository.save(section);
 
 		// ---
