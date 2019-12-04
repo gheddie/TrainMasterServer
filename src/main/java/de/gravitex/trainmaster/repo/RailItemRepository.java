@@ -13,6 +13,6 @@ import de.gravitex.trainmaster.entity.Track;
 @Repository
 public interface RailItemRepository extends JpaRepository<RailItem, Long> {
 
-	@Query(value = "SELECT rism FROM RailItemSequenceMembership rism INNER JOIN rism.railItemSequence seq INNER JOIN seq.railItemSequenceHolder WHERE seq.railItemSequenceHolder = :track ORDER BY seq.ordinalPosition ASC, rism.ordinalPosition ASC")
+	@Query(value = "SELECT rism FROM RailItemSequenceMembership rism INNER JOIN rism.railItemSequence seq INNER JOIN seq.track WHERE seq.track = :track ORDER BY seq.ordinalPosition ASC, rism.ordinalPosition ASC")
 	List<RailItemSequenceMembership> findByTrack(Track track);
 }

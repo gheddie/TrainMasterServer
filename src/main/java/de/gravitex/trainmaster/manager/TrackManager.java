@@ -15,15 +15,15 @@ public class TrackManager {
 	public static TrackPopulation populateTrack(Track track, RailItemSequence locomotiveSequence, RailItemSequence... waggonSequences) {
 		// locos
 		if (locomotiveSequence != null) {
-			locomotiveSequence.setRailItemSequenceHolder(track);
+			locomotiveSequence.setTrack(track);
 			track.getRailItemSequences().add(locomotiveSequence);
-			locomotiveSequence.setRailItemSequenceHolder(track);
+			locomotiveSequence.setTrack(track);
 		}
 		// waggons
 		for (RailItemSequence railItemSequence : waggonSequences) {
-			railItemSequence.setRailItemSequenceHolder(track);
+			railItemSequence.setTrack(track);
 			track.getRailItemSequences().add(railItemSequence);
-			railItemSequence.setRailItemSequenceHolder(track);
+			railItemSequence.setTrack(track);
 		}
 		return new TrackPopulation(track, locomotiveSequence, Arrays.asList(waggonSequences));
 	}

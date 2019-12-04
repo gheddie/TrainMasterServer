@@ -37,12 +37,12 @@ public class TrainRunManager {
 		trainRun.setTrainRunState(TrainRunState.ARRIVED);
 		// switch locos to entry track (if any)
 		if (train.getLocomotives() != null) {
-			train.getLocomotives().setRailItemSequenceHolder(entryTrack);
+			train.getLocomotives().setTrack(entryTrack);
 			entryTrack.getRailItemSequences().add(train.getLocomotives());
 		}
 		// switch waggons to entry track (if any)
 		if (train.getWaggonSequence() != null) {
-			train.getWaggonSequence().setRailItemSequenceHolder(entryTrack);
+			train.getWaggonSequence().setTrack(entryTrack);
 			entryTrack.getRailItemSequences().add(train.getWaggonSequence());
 		}
 		train.setActualStation(trainRunSectionByIndex.getStationTo().getStation());
@@ -64,13 +64,13 @@ public class TrainRunManager {
 		Track railItemTrack = null;
 		HashSet<Track> trackSet = new HashSet<>();
 		if (locomotiveSequence != null) {
-			railItemTrack = (Track) locomotiveSequence.getRailItemSequenceHolder();
+			railItemTrack = (Track) locomotiveSequence.getTrack();
 			if (railItemTrack == null) {
 				throw new TrainRunException("loco sequence without a track detected!!");
 			}
 			trackSet.add(railItemTrack);
 		}
-		railItemTrack = (Track) waggonSequenceForExit.getRailItemSequenceHolder();
+		railItemTrack = (Track) waggonSequenceForExit.getTrack();
 		if (railItemTrack == null) {
 			throw new TrainRunException("waggon sequence without a track detected!!");
 		}
@@ -83,10 +83,10 @@ public class TrainRunManager {
 		train.setLocomotives(locomotiveSequence);
 		// switch loco(s) to train!!
 		if (locomotiveSequence != null) {
-			locomotiveSequence.setRailItemSequenceHolder(train);
+			locomotiveSequence.setTrain(train);
 		}
 		// switch waggon sequences to the train!!
-		waggonSequenceForExit.setRailItemSequenceHolder(train);
+		waggonSequenceForExit.setTrain(train);
 		train.getTrainRun().setTrainRunState(TrainRunState.PREPARED);
 		train.setActualStation(train.getTrainRun().getTrainRunSectionByIndex().getStationFrom().getStation());
 		return train;

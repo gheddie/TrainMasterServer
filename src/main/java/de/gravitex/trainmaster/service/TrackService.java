@@ -47,7 +47,7 @@ public class TrackService implements ITrackService {
 		Track track = trackRepository.findByTrackNumber(trackNumber);
 		List<RailItemSequenceMembership> sequenceMemberships = null;
 		String result = "";
-		for (RailItemSequence railItemSequence : railItemSequenceRepository.findByRailItemSequenceHolder(track)) {
+		for (RailItemSequence railItemSequence : railItemSequenceRepository.findByTrack(track)) {
 			sequenceMemberships = railItemSequenceMembershipRepository.findByRailItemSequence(railItemSequence);
 			for (RailItemSequenceMembership sequenceMembership : sequenceMemberships) {
 				result += sequenceMembership.getRailItem().getIdentifier() + "#";
@@ -73,7 +73,7 @@ public class TrackService implements ITrackService {
 				trackDTO = new TrackDTO();
 				trackDTO.fillValues(track);
 				result.addTrack(stationDTO, trackDTO);
-				for (RailItemSequence railItemSequence : railItemSequenceRepository.findByRailItemSequenceHolder(track)) {
+				for (RailItemSequence railItemSequence : railItemSequenceRepository.findByTrack(track)) {
 					railItemSequenceDTO = new RailItemSequenceDTO();
 					railItemSequenceDTO.fillValues(railItemSequence);
 					result.addRailItemSequence(stationDTO, trackDTO, railItemSequenceDTO);

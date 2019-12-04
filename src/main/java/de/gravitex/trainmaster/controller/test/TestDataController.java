@@ -186,7 +186,7 @@ public class TestDataController {
 		System.out.println("putWaggonToTrack :: waggon = " + railItem.getIdentifier() + ", track = "
 				+ track.getTrackNumber() + ", station = " + track.getStation().getStationName());
 
-		railItemSequence.setRailItemSequenceHolder(track);
+		railItemSequence.setTrack(track);
 		railItemSequenceRepository.save(railItemSequence);
 
 		RailItemSequenceMembership sequenceMembership = new RailItemSequenceMembership();

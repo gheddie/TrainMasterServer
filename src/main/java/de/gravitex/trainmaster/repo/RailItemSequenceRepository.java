@@ -11,5 +11,5 @@ import de.gravitex.trainmaster.entity.Track;
 @Repository
 public interface RailItemSequenceRepository extends JpaRepository<RailItemSequence, Long> {
 
-	List<RailItemSequence> findByRailItemSequenceHolder(Track track);
+	List<RailItemSequence> findByTrack(Track track);
 }
