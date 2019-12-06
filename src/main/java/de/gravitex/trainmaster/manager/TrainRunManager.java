@@ -11,7 +11,7 @@ import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
 import de.gravitex.trainmaster.entity.TrainRunSection;
-import de.gravitex.trainmaster.entity.enumeration.TrainRunState;
+import de.gravitex.trainmaster.entity.enumeration.TrainState;
 import de.gravitex.trainmaster.exception.TrainRunException;
 
 public class TrainRunManager {
@@ -23,7 +23,7 @@ public class TrainRunManager {
 		performChecks(train);
 		System.out.println("train is leaving station: " + train.getActualStationName());
 		train.setActualStation(null);
-		train.getTrainRun().setTrainRunState(TrainRunState.DEPARTED);
+		train.setTrainState(TrainState.DEPARTED);
 		return train;
 	}
 
@@ -34,7 +34,7 @@ public class TrainRunManager {
 		if (entryTrack == null) {
 			throw new TrainRunException("There must an entry track!!");
 		}
-		trainRun.setTrainRunState(TrainRunState.ARRIVED);
+		// trainRun.setTrainRunState(TrainState.ARRIVED);
 		// switch locos to entry track (if any)
 		if (train.getLocomotives() != null) {
 			train.getLocomotives().setTrack(entryTrack);
@@ -46,11 +46,13 @@ public class TrainRunManager {
 			entryTrack.getRailItemSequences().add(train.getWaggonSequence());
 		}
 		train.setActualStation(trainRunSectionByIndex.getStationTo().getStation());
+		/*
 		if (trainRun.getFinalIndex()) {
-			trainRun.setTrainRunState(TrainRunState.FINSHED);
+			trainRun.setTrainRunState(TrainState.FINSHED);
 		} else {
 			trainRun.increaseTrainRunSectionIndex();
 		}
+		*/
 		System.out.println("train is arriving at station: " + train.getActualStationName());
 		return train;
 	}
@@ -87,7 +89,7 @@ public class TrainRunManager {
 		}
 		// switch waggon sequences to the train!!
 		waggonSequenceForExit.setTrain(train);
-		train.getTrainRun().setTrainRunState(TrainRunState.PREPARED);
+		train.setTrainState(TrainState.PREPARED);
 		train.setActualStation(train.getTrainRun().getTrainRunSectionByIndex().getStationFrom().getStation());
 		return train;
 	}

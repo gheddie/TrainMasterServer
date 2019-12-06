@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import de.gravitex.trainmaster.dlh.EntityHelper;
 import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Station;
-import de.gravitex.trainmaster.entity.StationInfo;
+import de.gravitex.trainmaster.entity.TrainRunSectionNode;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
@@ -50,7 +50,7 @@ public class TrainRunTest {
 		Station stationS1 = new Station();
 		stationS1.setStationName("S1");
 		
-		StationInfo stationFrom = new StationInfo();
+		TrainRunSectionNode stationFrom = new TrainRunSectionNode();
 		stationFrom.setStation(stationS1);
 		stationFrom.setExitTrack(trackExitS1);
 		
@@ -59,7 +59,7 @@ public class TrainRunTest {
 		Station stationS2 = new Station();
 		stationS2.setStationName("S2");
 		
-		StationInfo stationTo = new StationInfo();
+		TrainRunSectionNode stationTo = new TrainRunSectionNode();
 		stationTo.setStation(stationS2);
 		stationTo.setEntryTrack(trackEntryS2);
 		
@@ -114,11 +114,11 @@ public class TrainRunTest {
 		Station stationS2 = new Station();
 		stationS2.setStationName("S2");
 		
-		StationInfo stationInfo1 = new StationInfo();
+		TrainRunSectionNode stationInfo1 = new TrainRunSectionNode();
 		stationInfo1.setStation(stationS1);
 		stationInfo1.setExitTrack(trackExitS1);
 		
-		StationInfo stationInfo2 = new StationInfo();
+		TrainRunSectionNode stationInfo2 = new TrainRunSectionNode();
 		stationInfo2.setStation(stationS2);
 		stationInfo2.setEntryTrack(trackEntryS2);
 		

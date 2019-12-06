@@ -1,6 +1,6 @@
 package de.gravitex.trainmaster.entity.enumeration;
 
-public enum TrainRunState {
+public enum TrainState {
 	PREPARED,
 	FINSHED,
 	DEPARTED,

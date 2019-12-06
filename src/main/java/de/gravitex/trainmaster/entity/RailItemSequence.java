@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -36,10 +37,6 @@ public class RailItemSequence extends BaseEntity implements PositionedItem {
 
 	@OneToMany
 	private List<RailItemSequenceMembership> railItemSequenceMemberships = new ArrayList<>();
-
-	public RailItemSequence() {
-		super();
-	}
 
 	@Override
 	@PrePersist

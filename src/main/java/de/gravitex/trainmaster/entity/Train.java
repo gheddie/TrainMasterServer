@@ -5,6 +5,7 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import de.gravitex.trainmaster.entity.enumeration.TrainState;
 import lombok.Data;
 
 @Entity
@@ -23,6 +24,9 @@ public class Train extends RailItemSequenceHolder {
 	
 	@OneToOne
 	public TrainRun trainRun;
+	
+	@NotNull
+	public TrainState trainState;
 	
 	@OneToOne
 	public Station actualStation;

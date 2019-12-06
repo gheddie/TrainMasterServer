@@ -9,4 +9,8 @@ import lombok.Data;
 public class TrainRunDescriptor {
 
 	private List<StationInfoDTO> stationInfoDTOs;
+	
+	private String trainNumber;
+	
+	private String sequenceIdentifier;
 }

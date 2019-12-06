@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class StationInfo extends BaseEntity {
+public class TrainRunSectionNode extends BaseEntity {
 
 	@NotNull
 	@OneToOne

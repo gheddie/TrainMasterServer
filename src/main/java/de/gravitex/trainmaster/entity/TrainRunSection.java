@@ -23,9 +23,9 @@ public class TrainRunSection extends BaseEntity {
 
 	@NotNull
 	@OneToOne
-	private StationInfo stationFrom;
+	private TrainRunSectionNode stationFrom;
 
 	@NotNull
 	@OneToOne
-	private StationInfo stationTo;
+	private TrainRunSectionNode stationTo;
 }

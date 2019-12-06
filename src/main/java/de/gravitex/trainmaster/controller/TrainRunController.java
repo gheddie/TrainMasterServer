@@ -15,13 +15,19 @@ import de.gravitex.trainmaster.common.DataGrid;
 import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dto.StationInfoDTO;
 import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
+import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Station;
-import de.gravitex.trainmaster.entity.StationInfo;
+import de.gravitex.trainmaster.entity.TrainRunSectionNode;
+import de.gravitex.trainmaster.entity.Track;
+import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;
 import de.gravitex.trainmaster.entity.TrainRunSection;
+import de.gravitex.trainmaster.entity.enumeration.TrainState;
 import de.gravitex.trainmaster.exception.TrainRunException;
+import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.StationInfoRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
+import de.gravitex.trainmaster.repo.TrainRepository;
 import de.gravitex.trainmaster.repo.TrainRunRepository;
 import de.gravitex.trainmaster.repo.TrainRunSectionRepository;
 import de.gravitex.trainmaster.repo.WaggonRepository;
@@ -33,6 +39,9 @@ public class TrainRunController implements ITrainRunController {
 
 	@Autowired
 	private TrainRunRepository trainRunRepository;
+	
+	@Autowired
+	private TrainRepository trainRepository;
 
 	@Autowired
 	private TrainRunSectionRepository trainRunSectionRepository;
@@ -42,6 +51,9 @@ public class TrainRunController implements ITrainRunController {
 
 	@Autowired
 	private StationRepository stationRepository;
+	
+	@Autowired
+	private RailItemSequenceRepository railItemSequenceRepository;
 
 	@Autowired
 	WaggonRepository waggonRepository;
@@ -49,119 +61,39 @@ public class TrainRunController implements ITrainRunController {
 	@Autowired
 	ITrackService trackService;
 
-	@Transactional
-	@RequestMapping(ServerMappings.TrainRun.TRAIN)
-	public ResponseEntity<String> train(@RequestParam(value = "trackNumber") String trackNumber) {
-
-		/*
-		 * Station station1 = new Station("S1"); stationRepository.save(station1);
-		 * 
-		 * Station station2 = new Station("S2"); stationRepository.save(station2);
-		 * 
-		 * Locomotive locomotive1 = EntityHelper.makeLocomotive("L1");
-		 * railItemRepository.save(locomotive1);
-		 * 
-		 * Waggon waggon123 = EntityHelper.makeWaggon("123");
-		 * railItemRepository.save(waggon123);
-		 * 
-		 * Waggon waggon234 = EntityHelper.makeWaggon("234");
-		 * railItemRepository.save(waggon234);
-		 * 
-		 * Waggon waggon345 = EntityHelper.makeWaggon("345");
-		 * railItemRepository.save(waggon345);
-		 * 
-		 * Waggon waggon456 = EntityHelper.makeWaggon("456");
-		 * railItemRepository.save(waggon456);
-		 * 
-		 * Waggon waggon567 = EntityHelper.makeWaggon("567");
-		 * railItemRepository.save(waggon567);
-		 * 
-		 * Track track1Station1 = new Track("track1Station1");
-		 * track1Station1.setStation(station1); trackRepository.save(track1Station1);
-		 * 
-		 * Track track2Station1 = new Track("track2Station1");
-		 * track2Station1.setStation(station1); trackRepository.save(track2Station1);
-		 * 
-		 * Track track1Station2 = new Track("track1Station2");
-		 * track1Station2.setStation(station2); trackRepository.save(track1Station2);
-		 * 
-		 * RailItemSequence seqLocos = new RailItemSequence(0);
-		 * railItemSequenceRepository.save(seqLocos); RailItemSequence seqTrack1Station1
-		 * = new RailItemSequence(1);
-		 * railItemSequenceRepository.save(seqTrack1Station1); RailItemSequence
-		 * seqTrack2Station1 = new RailItemSequence(0);
-		 * railItemSequenceRepository.save(seqTrack2Station1); RailItemSequence
-		 * seqTrack1Station2 = new RailItemSequence(0);
-		 * railItemSequenceRepository.save(seqTrack1Station2);
-		 * 
-		 * putRailItemToTrack(locomotive1, track1Station1, seqLocos, 0);
-		 * putRailItemToTrack(waggon123, track1Station1, seqTrack1Station1, 0);
-		 * putRailItemToTrack(waggon234, track1Station1, seqTrack1Station1, 1);
-		 * putRailItemToTrack(waggon345, track2Station1, seqTrack2Station1, 0);
-		 * putRailItemToTrack(waggon456, track1Station2, seqTrack1Station2, 0);
-		 * putRailItemToTrack(waggon567, track1Station2, seqTrack1Station2, 1);
-		 * 
-		 * renderTracksAndWaggons("BEFORE");
-		 * 
-		 * // create train with a train run Station 1 -> Station 2 StationInfo
-		 * stationInfo1 = new StationInfo(station1, null, track1Station1);
-		 * stationInfoRepository.save(stationInfo1); StationInfo stationInfo2 = new
-		 * StationInfo(station2, track1Station2, null);
-		 * stationInfoRepository.save(stationInfo2); TrainRunSection sec1 = new
-		 * TrainRunSection(stationInfo1, stationInfo2);
-		 * trainRunSectionRepository.save(sec1); Train train = new Train(); TrainRun
-		 * trainRun = new TrainRun(); trainRunRepository.save(trainRun);
-		 * train.setTrainRun(trainRun); trainRun.getTrainRunSections().add(sec1);
-		 * trainRepository.save(train);
-		 */
-
-		// ---------------------------------------------
-
-		/*
-		 * // run train TrainRunner trainRunner = new TrainRunner();
-		 * trainRunner.withArguments(track1Station1, seqLocos, seqTrack1Station1,
-		 * track1Station2, train); trainRunner.depart();
-		 * renderTracksAndWaggons("AFTER DEPART"); String trackSequence =
-		 * productService.getTrackSequenceAsString(trackNumber); return new
-		 * ResponseEntity<String>(trackSequence, HttpStatus.OK);
-		 */
-
-		return null;
-	}
-
 	@Transactional(rollbackOn = TrainRunException.class)
 	@PostMapping(ServerMappings.TrainRun.PREPARE_TRAIN)
 	public ResponseEntity<String> prepareTrain(@RequestBody TrainRunDescriptor trainRunDescriptor) {
-
+		
 		TrainRun trainRun = new TrainRun();
 		trainRunRepository.save(trainRun);
+		
+		Train train = new Train();
+		train.setTrainState(TrainState.PREPARED);
+		train.setTrainNumber(trainRunDescriptor.getTrainNumber());
+		RailItemSequence sequence = railItemSequenceRepository.findBySequenceIdentifier(trainRunDescriptor.getSequenceIdentifier());
+		train.setWaggonSequence(sequence);
+		train.setTrainRun(trainRun);
+		trainRepository.save(train);
 
 		for (int index = 0; index < trainRunDescriptor.getStationInfoDTOs().size() - 1; index++) {
 
 			StationInfoDTO stationInfoFrom = trainRunDescriptor.getStationInfoDTOs().get(index);
 			StationInfoDTO stationInfoTo = trainRunDescriptor.getStationInfoDTOs().get(index + 1);
 
-			/*
-			 * System.out.println(stationInfoFrom.getStation() + " --> " +
-			 * stationInfoTo.getStation());
-			 */
-
 			createTrainRunSection(trainRun, stationRepository.findByStationName(stationInfoFrom.getStation()),
 					stationRepository.findByStationName(stationInfoTo.getStation()), index);
 		}
-
-		// trainRun.getTrainRunSections().add(section);
-
 		return new ResponseEntity<String>("TRAIN_PREPARED", HttpStatus.OK);
 	}
 
 	private void createTrainRunSection(TrainRun trainRun, Station stationFrom, Station stationTo, int sectionIndex) {
 
-		StationInfo infoFrom = new StationInfo();
+		TrainRunSectionNode infoFrom = new TrainRunSectionNode();
 		infoFrom.setStation(stationFrom);
 		stationInfoRepository.save(infoFrom);
 
-		StationInfo infoTo = new StationInfo();
+		TrainRunSectionNode infoTo = new TrainRunSectionNode();
 		infoTo.setStation(stationTo);
 		stationInfoRepository.save(infoTo);
 
@@ -206,25 +138,25 @@ public class TrainRunController implements ITrainRunController {
 	@Transactional
 	@RequestMapping(ServerMappings.TrainRun.DEAPRT_TRAIN)
 	public ResponseEntity<String> departTrain(@RequestParam(value = "trainNumber") String trainNumber) {
+		
+		Train train = trainRepository.findByTrainNumber(trainNumber);
+		
+		// remove train waggon sequnce from track
+		train.getWaggonSequence().setTrack(null);
 
 		return new ResponseEntity<String>("DEPARTED", HttpStatus.OK);
-
-		// ---
-
-		/*
-		 * Train train = trainRepository.findByTrainNumber("ABC-DEF-GHI");
-		 * 
-		 * Track exitTrack = null; RailItemSequence locomotiveSequence = null;
-		 * RailItemSequence waggonSequenceForExit = null; Track aEntryTrack = null;
-		 * 
-		 * TrainRunSequencePerformer performer = new
-		 * TrainRunSequencePerformer().withArguments(exitTrack, locomotiveSequence,
-		 * waggonSequenceForExit, aEntryTrack, train);
-		 * 
-		 * performer.depart();
-		 * 
-		 * return null;
-		 */
+	}
+	
+	@Transactional
+	@RequestMapping(ServerMappings.TrainRun.ARRIVE_TRAIN)
+	public ResponseEntity<String> arriveTrain(@RequestParam(value = "trainNumber") String trainNumber) {
+		
+		Train train = trainRepository.findByTrainNumber(trainNumber);
+		int actualTrainRunSectionIndex = train.getTrainRun().getActualTrainRunSectionIndex();
+		TrainRunSection trainRunSection = trainRunSectionRepository.findByTrainRun(train.getTrainRun()).get(actualTrainRunSectionIndex);
+		Track entryTrack = trainRunSection.getStationTo().getEntryTrack();
+		
+		return new ResponseEntity<String>("ARRIVED", HttpStatus.OK);
 	}
 
 	@Transactional

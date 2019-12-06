@@ -9,11 +9,11 @@ public class ServerMappings {
 	
 	public class TrainRun {
 
-		public static final String TRAIN = "/train";
-		
 		public static final String STATION_DATA = "/stationdata";
 
 		public static final String DEAPRT_TRAIN = "/runtrain";
+		
+		public static final String ARRIVE_TRAIN = "/arrivetrain";
 
 		public static final String PREPARE_TRAIN = "/preparetrain";
 		

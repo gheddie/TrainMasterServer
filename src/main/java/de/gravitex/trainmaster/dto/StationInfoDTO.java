@@ -2,11 +2,11 @@ package de.gravitex.trainmaster.dto;
 
 import javax.persistence.OneToOne;
 
-import de.gravitex.trainmaster.entity.StationInfo;
+import de.gravitex.trainmaster.entity.TrainRunSectionNode;
 import lombok.Data;
 
 @Data
-public class StationInfoDTO extends SingleEntityServerDTO<StationInfo> {
+public class StationInfoDTO extends SingleEntityServerDTO<TrainRunSectionNode> {
 	
 	private String station;
 	
@@ -17,7 +17,7 @@ public class StationInfoDTO extends SingleEntityServerDTO<StationInfo> {
 	private String exitTrack;
 
 	@Override
-	public void fillValues(StationInfo entity) {
+	public void fillValues(TrainRunSectionNode entity) {
 		// TODO Auto-generated method stub
 	}
 }

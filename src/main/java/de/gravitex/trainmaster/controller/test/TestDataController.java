@@ -16,7 +16,7 @@ import de.gravitex.trainmaster.entity.RailItem;
 import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.Station;
-import de.gravitex.trainmaster.entity.StationInfo;
+import de.gravitex.trainmaster.entity.TrainRunSectionNode;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.TrainRun;

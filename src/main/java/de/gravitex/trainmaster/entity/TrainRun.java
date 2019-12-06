@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.validation.constraints.NotNull;
 
-import de.gravitex.trainmaster.entity.enumeration.TrainRunState;
+import de.gravitex.trainmaster.entity.enumeration.TrainState;
 import de.gravitex.trainmaster.exception.TrainRunException;
 import lombok.Data;
 
@@ -20,13 +22,11 @@ public class TrainRun extends BaseEntity implements CheckedEntity {
 
 	public int actualTrainRunSectionIndex = 0;
 
-	public TrainRunState trainRunState;
-
-	public static TrainRun fromStationNames(StationInfo... stationInfos) {
+	public static TrainRun fromStationNames(TrainRunSectionNode... stationInfos) {
 		
 		TrainRun result = new TrainRun();
-		StationInfo stationInfoActual = null;
-		StationInfo stationInfoFollowing = null;
+		TrainRunSectionNode stationInfoActual = null;
+		TrainRunSectionNode stationInfoFollowing = null;
 		TrainRunSection trainRunSection = null;
 		for (int index = 0; index < stationInfos.length - 1; index++) {
 			stationInfoActual = stationInfos[index];
