@@ -5,21 +5,17 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.ForeignKey;
 
 import lombok.Data;
 
 // @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "rail_item_sequence_holder_id", "ordinal_position" }) })
 @Entity
 @Data
-public class RailItemSequence extends BaseEntity implements PositionedItem {
+public class RailItemSequence extends BaseEntity {
 	
 	@NotNull
 	@Column(name = "ordinal_position")
@@ -37,14 +33,4 @@ public class RailItemSequence extends BaseEntity implements PositionedItem {
 
 	@OneToMany
 	private List<RailItemSequenceMembership> railItemSequenceMemberships = new ArrayList<>();
-
-	@Override
-	@PrePersist
-	public void adjustedOrdinalPositions() {
-		int ordinalIndex = 0;
-		for (RailItemSequenceMembership r : railItemSequenceMemberships) {
-			r.setOrdinalPosition(ordinalIndex);
-			ordinalIndex++;
-		}
-	}
 }

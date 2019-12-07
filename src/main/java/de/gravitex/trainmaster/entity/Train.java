@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import de.gravitex.trainmaster.entity.enumeration.TrainState;
+import de.gravitex.trainmaster.entity.trainrun.TrainRun;
 import lombok.Data;
 
 @Entity

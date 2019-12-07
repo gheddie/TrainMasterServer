@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.gravitex.trainmaster.config.ServerMappings;
-import de.gravitex.trainmaster.dto.StationInfoDTO;
+import de.gravitex.trainmaster.dto.TrainRunSectionNodeDTO;
 import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
 import de.gravitex.trainmaster.request.TrainRunDescriptor;
 
@@ -51,9 +51,9 @@ public class TrainRunControllerTest {
 	 * S1 (exit) --> track1Station1
 	 * 
 	 * S2 (entry) --> track1Station2
-	 * S2 (exit) --> ???
+	 * S2 (exit) --> track1Station2
 	 * 
-	 * S3 (entry) --> ???
+	 * S3 (entry) --> track1Station3
 	 * 
 	 * @throws Exception
 	 */
@@ -81,24 +81,22 @@ public class TrainRunControllerTest {
 		TrainRunDescriptor trainRunDescriptor = new TrainRunDescriptor();
 		trainRunDescriptor.setTrainNumber("TRAIN_TEST_NUMBER");
 		trainRunDescriptor.setSequenceIdentifier("seqTrack1Station1");
-		List<StationInfoDTO> stationInfoDTOs = new ArrayList<StationInfoDTO>();
+		List<TrainRunSectionNodeDTO> stationInfoDTOs = new ArrayList<TrainRunSectionNodeDTO>();
 		
-		// S1
-		StationInfoDTO stationInfo1 = new StationInfoDTO();
-		stationInfo1.setStation("S1");
+		// S1 --> S2
+		TrainRunSectionNodeDTO stationInfo1 = new TrainRunSectionNodeDTO();
+		stationInfo1.setStationFrom("S1");
+		stationInfo1.setStationTo("S2");
 		stationInfo1.setExitTrack("track1Station1");
+		stationInfo1.setEntryTrack("track1Station2");
 		stationInfoDTOs.add(stationInfo1);
-		// S2
-		StationInfoDTO stationInfo2 = new StationInfoDTO();
-		stationInfo2.setStation("S2");
+		// S2 --> S3
+		TrainRunSectionNodeDTO stationInfo2 = new TrainRunSectionNodeDTO();
+		stationInfo2.setStationFrom("S2");
+		stationInfo2.setStationTo("S3");
 		stationInfo2.setEntryTrack("track1Station2");
-		// stationInfo2.setExitTrack("TExitS2");
+		stationInfo2.setExitTrack("track1Station3");
 		stationInfoDTOs.add(stationInfo2);
-		// S3
-		StationInfoDTO stationInfo3 = new StationInfoDTO();
-		stationInfo3.setStation("S3");
-		// stationInfo3.setEntryTrack("TEntryS3");
-		stationInfoDTOs.add(stationInfo3);
 		
 		trainRunDescriptor.setStationInfoDTOs(stationInfoDTOs);
 
@@ -122,7 +120,7 @@ public class TrainRunControllerTest {
 		mockMvc.perform(get(ServerMappings.TrainRun.ARRIVE_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("ARRIVED")));
 		
 		// 'seqTrack1Station1' must appear on track 'track1Station2'
-		assertTrackSequence(getStationDataFromServer(), "S2", "track1Station2", "[track1Station1]::seqLocos{[L1]}seqTrack1Station1{[123][234]}");
+		assertTrackSequence(getStationDataFromServer(), "S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}seqTrack1Station1{[123][234]}");
 	}
 
 	private StationsAndTracksAndWaggonsDTO getStationDataFromServer()

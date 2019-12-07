@@ -1,19 +1,17 @@
 package de.gravitex.trainmaster.dto;
 
-import javax.persistence.OneToOne;
-
-import de.gravitex.trainmaster.entity.TrainRunSectionNode;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionNode;
 import lombok.Data;
 
 @Data
-public class StationInfoDTO extends SingleEntityServerDTO<TrainRunSectionNode> {
+public class TrainRunSectionNodeDTO extends SingleEntityServerDTO<TrainRunSectionNode> {
 	
-	private String station;
+	private String stationFrom;
 	
-	@OneToOne
+	private String stationTo;
+	
 	private String entryTrack;
 	
-	@OneToOne
 	private String exitTrack;
 
 	@Override

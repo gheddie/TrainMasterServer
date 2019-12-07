@@ -9,9 +9,9 @@ import de.gravitex.trainmaster.checker.TrainChecker;
 import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
-import de.gravitex.trainmaster.entity.TrainRun;
-import de.gravitex.trainmaster.entity.TrainRunSection;
 import de.gravitex.trainmaster.entity.enumeration.TrainState;
+import de.gravitex.trainmaster.entity.trainrun.TrainRun;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSection;
 import de.gravitex.trainmaster.exception.TrainRunException;
 
 public class TrainRunManager {
@@ -30,7 +30,7 @@ public class TrainRunManager {
 	public static Train arriveTrain(Train train) {
 		TrainRun trainRun = train.getTrainRun();
 		TrainRunSection trainRunSectionByIndex = trainRun.getTrainRunSectionByIndex();
-		Track entryTrack = trainRunSectionByIndex.getStationTo().getEntryTrack();
+		Track entryTrack = trainRunSectionByIndex.getNodeTo().getEntryTrack();
 		if (entryTrack == null) {
 			throw new TrainRunException("There must an entry track!!");
 		}
@@ -45,7 +45,7 @@ public class TrainRunManager {
 			train.getWaggonSequence().setTrack(entryTrack);
 			entryTrack.getRailItemSequences().add(train.getWaggonSequence());
 		}
-		train.setActualStation(trainRunSectionByIndex.getStationTo().getStation());
+		train.setActualStation(trainRunSectionByIndex.getNodeTo().getStationTo());
 		/*
 		if (trainRun.getFinalIndex()) {
 			trainRun.setTrainRunState(TrainState.FINSHED);
@@ -90,7 +90,7 @@ public class TrainRunManager {
 		// switch waggon sequences to the train!!
 		waggonSequenceForExit.setTrain(train);
 		train.setTrainState(TrainState.PREPARED);
-		train.setActualStation(train.getTrainRun().getTrainRunSectionByIndex().getStationFrom().getStation());
+		train.setActualStation(train.getTrainRun().getTrainRunSectionByIndex().getNodeFrom().getStationFrom());
 		return train;
 	}
 

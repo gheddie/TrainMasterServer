@@ -16,16 +16,16 @@ import de.gravitex.trainmaster.entity.RailItem;
 import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.Station;
-import de.gravitex.trainmaster.entity.TrainRunSectionNode;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
-import de.gravitex.trainmaster.entity.TrainRun;
-import de.gravitex.trainmaster.entity.TrainRunSection;
 import de.gravitex.trainmaster.entity.Waggon;
+import de.gravitex.trainmaster.entity.trainrun.TrainRun;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSection;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionNode;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
-import de.gravitex.trainmaster.repo.StationInfoRepository;
+import de.gravitex.trainmaster.repo.TrainRunSectionNodeRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
 import de.gravitex.trainmaster.repo.TrainRepository;
@@ -62,7 +62,7 @@ public class TestDataController {
 	private TrainRunSectionRepository trainRunSectionRepository;
 
 	@Autowired
-	private StationInfoRepository stationInfoRepository;
+	private TrainRunSectionNodeRepository stationInfoRepository;
 
 	@Autowired
 	WaggonRepository waggonRepository;

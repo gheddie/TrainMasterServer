@@ -14,18 +14,30 @@ import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.Track;
+import de.gravitex.trainmaster.entity.trainrun.FinalTrainRunSection;
+import de.gravitex.trainmaster.entity.trainrun.InitialTrainRunSection;
+import de.gravitex.trainmaster.entity.trainrun.IntermediateTrainRunSection;
+import de.gravitex.trainmaster.entity.trainrun.TrainRun;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSection;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionArrivalNode;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionDepartureNode;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
+import de.gravitex.trainmaster.repo.TrainRunSectionNodeRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
 import de.gravitex.trainmaster.repo.TrainRunRepository;
+import de.gravitex.trainmaster.repo.TrainRunSectionRepository;
 
 @Component
 public class TrackService implements ITrackService {
 
 	@Autowired
 	TrainRunRepository trainRunRepository;
+	
+	@Autowired
+	TrainRunSectionRepository trainRunSectionRepository;
 
 	@Autowired
 	TrackRepository trackRepository;
@@ -41,6 +53,9 @@ public class TrackService implements ITrackService {
 	
 	@Autowired
 	RailItemRepository railItemRepository;
+	
+	@Autowired
+	TrainRunSectionNodeRepository trainRunSectionNodeRepository;
 
 	@Override
 	public String getTrackSequenceAsString(String trackNumber) {
@@ -73,7 +88,7 @@ public class TrackService implements ITrackService {
 				trackDTO = new TrackDTO();
 				trackDTO.fillValues(track);
 				result.addTrack(stationDTO, trackDTO);
-				for (RailItemSequence railItemSequence : railItemSequenceRepository.findByTrack(track)) {
+				for (RailItemSequence railItemSequence : railItemSequenceRepository.findByTrackOrderedByOrdinalPosition(track)) {
 					railItemSequenceDTO = new RailItemSequenceDTO();
 					railItemSequenceDTO.fillValues(railItemSequence);
 					result.addRailItemSequence(stationDTO, trackDTO, railItemSequenceDTO);
@@ -87,5 +102,39 @@ public class TrackService implements ITrackService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	public void createTrainRunSection(TrainRun trainRun, Station stationFrom, Station stationTo, Track entryTrack,
+			Track exitTrack, int sectionIndex, int totalStationCount) {
+		
+		TrainRunSectionDepartureNode trainRunSectionNodeFrom = new TrainRunSectionDepartureNode();
+		trainRunSectionNodeFrom.setStationFrom(stationFrom);
+		trainRunSectionNodeFrom.setExitTrack(exitTrack);
+		trainRunSectionNodeRepository.save(trainRunSectionNodeFrom);
+
+		TrainRunSectionArrivalNode trainRunSectionNodeTo = new TrainRunSectionArrivalNode();
+		trainRunSectionNodeTo.setStationTo(stationTo);
+		trainRunSectionNodeTo.setEntryTrack(entryTrack);
+		trainRunSectionNodeRepository.save(trainRunSectionNodeTo);
+
+		TrainRunSection trainRunSection = null;
+
+		if (sectionIndex == 0) {
+			trainRunSection = new InitialTrainRunSection();
+		} else if (sectionIndex == totalStationCount) {
+			trainRunSection = new IntermediateTrainRunSection();
+		} else {
+			trainRunSection = new FinalTrainRunSection();
+		}
+
+		trainRunSection.setNodeFrom(trainRunSectionNodeFrom);
+		trainRunSection.setNodeTo(trainRunSectionNodeTo);
+		
+		trainRunSection.setTrainRun(trainRun);
+		trainRunSection.setSectionIndex(sectionIndex);
+
+		trainRunSectionRepository.save(trainRunSection);
+		
 	}
 }
