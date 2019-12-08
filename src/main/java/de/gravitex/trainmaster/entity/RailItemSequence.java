@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
-// @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "rail_item_sequence_holder_id", "ordinal_position" }) })
 @Entity
 @Data
 public class RailItemSequence extends BaseEntity {

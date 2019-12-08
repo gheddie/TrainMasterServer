@@ -26,6 +26,7 @@ import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dto.TrainRunSectionNodeDTO;
 import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
 import de.gravitex.trainmaster.request.TrainRunDescriptor;
+import de.gravitex.trainmaster.util.TrainRunTestUtil;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -64,16 +65,16 @@ public class TrainRunControllerTest {
 		mockMvc.perform(get(ServerMappings.TestData.CREATE));
 
 		// S1
-		assertTrackSequence("S1", "track1Station1",
-				"[track1Station1]::seqLocos{[L1]}seqTrack1Station1{[123][234]}");
-		assertTrackSequence("S1", "track2Station1", "[track2Station1]::seqTrack2Station1{[345]}");
+		TrainRunTestUtil.assertTrackSequence("S1", "track1Station1",
+				"[track1Station1]::seqLocos{[L1]}seqTrack1Station1{[123][234]}", mockMvc);
+		TrainRunTestUtil.assertTrackSequence("S1", "track2Station1", "[track2Station1]::seqTrack2Station1{[345]}", mockMvc);
 		
 		// S2
-		assertTrackSequence("S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}");
-		assertTrackSequence("S2", "track2Station2", "[track2Station2]::#BLANK#");
+		TrainRunTestUtil.assertTrackSequence("S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}", mockMvc);
+		TrainRunTestUtil.assertTrackSequence("S2", "track2Station2", "[track2Station2]::#BLANK#", mockMvc);
 		
 		// S3
-		assertTrackSequence("S3", "track1Station3", "[track1Station3]::#BLANK#");
+		TrainRunTestUtil.assertTrackSequence("S3", "track1Station3", "[track1Station3]::#BLANK#", mockMvc);
 
 		TrainRunDescriptor trainRunDescriptor = new TrainRunDescriptor();
 		trainRunDescriptor.setTrainNumber("TRAIN_TEST_NUMBER");
@@ -91,8 +92,8 @@ public class TrainRunControllerTest {
 		TrainRunSectionNodeDTO stationInfo2 = new TrainRunSectionNodeDTO();
 		stationInfo2.setStationFrom("S2");
 		stationInfo2.setStationTo("S3");
-		stationInfo2.setEntryTrack("track1Station2");
-		stationInfo2.setExitTrack("track1Station3");
+		stationInfo2.setExitTrack("track1Station2");
+		stationInfo2.setEntryTrack("track1Station3");
 		stationInfoDTOs.add(stationInfo2);
 		
 		trainRunDescriptor.setStationInfoDTOs(stationInfoDTOs);
@@ -109,35 +110,18 @@ public class TrainRunControllerTest {
 
 		// depart train from 'S1' --> 'seqTrack1Station1' must have left track 'track1Station1'
 		mockMvc.perform(get(ServerMappings.TrainRun.DEAPRT_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("DEPARTED")));
-		assertTrackSequence("S1", "track1Station1", "[track1Station1]::seqLocos{[L1]}");
+		TrainRunTestUtil.assertTrackSequence("S1", "track1Station1", "[track1Station1]::seqLocos{[L1]}", mockMvc);
 		
 		// arrive train at 'S2' --> 'seqTrack1Station1' must appear on track 'track1Station2' 
 		mockMvc.perform(get(ServerMappings.TrainRun.ARRIVE_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("ARRIVED")));
-		assertTrackSequence("S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}seqTrack1Station1{[123][234]}");
+		TrainRunTestUtil.assertTrackSequence("S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}seqTrack1Station1{[123][234]}", mockMvc);
 		
 		// depart train from 'S2' --> 'seqTrack1Station1' must have left track 'track1Station2'
 		mockMvc.perform(get(ServerMappings.TrainRun.DEAPRT_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("DEPARTED")));
-		assertTrackSequence("S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}");
+		TrainRunTestUtil.assertTrackSequence("S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}", mockMvc);
 		
-		// arrive train at 'S3'
+		// arrive train at 'S3' --> 'seqTrack1Station1' must appear on track 'track1Station3'
 		mockMvc.perform(get(ServerMappings.TrainRun.ARRIVE_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("ARRIVED")));
-		// ...
-	}
-
-	private void assertTrackSequence(String station,
-			String track, String expectedTrackSequence) throws Exception {
-		
-		StationsAndTracksAndWaggonsDTO stationAndTracksAndWaggons = getStationDataFromServer();
-		String actualTrackWaggonsAsString = stationAndTracksAndWaggons.getTrackWaggonsAsString(station, track);
-		Assert.isTrue(actualTrackWaggonsAsString.equals(expectedTrackSequence));
-	}
-	
-	private StationsAndTracksAndWaggonsDTO getStationDataFromServer() throws Exception {
-
-		ResultActions resultActions = mockMvc.perform(get(ServerMappings.TrainRun.STATION_DATA));
-		String json = resultActions.andReturn().getResponse().getContentAsString();
-		ObjectMapper mapper = new ObjectMapper();
-		StationsAndTracksAndWaggonsDTO sataw = mapper.readValue(json, StationsAndTracksAndWaggonsDTO.class);
-		return sataw;
+		TrainRunTestUtil.assertTrackSequence("S3", "track1Station3", "[track1Station3]::seqTrack1Station1{[123][234]}", mockMvc);
 	}
 }

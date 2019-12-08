@@ -41,7 +41,7 @@ public class TrainRunController implements ITrainRunController {
 
 	@Autowired
 	private TrainRepository trainRepository;
-	
+
 	@Autowired
 	private TrackRepository trackRepository;
 
@@ -76,18 +76,16 @@ public class TrainRunController implements ITrainRunController {
 		train.setTrainRun(trainRun);
 		trainRepository.save(train);
 
-		for (int index = 0; index < trainRunDescriptor.getStationInfoDTOs().size() - 1; index++) {
-
-			TrainRunSectionNodeDTO nodeFrom = trainRunDescriptor.getStationInfoDTOs().get(index);
-			TrainRunSectionNodeDTO nodeTo = trainRunDescriptor.getStationInfoDTOs().get(index + 1);
-
-			Track entryTrack = trackRepository.findByTrackNumber(nodeFrom.getEntryTrack());
-			Track exitTrack = trackRepository.findByTrackNumber(nodeFrom.getExitTrack());
-			
-			trackService.createTrainRunSection(trainRun, stationRepository.findByStationName(nodeFrom.getStationFrom()),
-					stationRepository.findByStationName(nodeTo.getStationTo()), entryTrack, exitTrack, index,
+		int index = 0;
+		for (TrainRunSectionNodeDTO dto : trainRunDescriptor.getStationInfoDTOs()) {
+			trackService.createTrainRunSection(trainRun, stationRepository.findByStationName(dto.getStationFrom()),
+					stationRepository.findByStationName(dto.getStationTo()),
+					trackRepository.findByTrackNumber(dto.getEntryTrack()),
+					trackRepository.findByTrackNumber(dto.getExitTrack()), index,
 					trainRunDescriptor.getStationInfoDTOs().size());
+			index++;
 		}
+
 		return new ResponseEntity<String>("TRAIN_PREPARED", HttpStatus.OK);
 	}
 
@@ -115,23 +113,28 @@ public class TrainRunController implements ITrainRunController {
 	public ResponseEntity<String> arriveTrain(@RequestParam(value = "trainNumber") String trainNumber) {
 
 		Train train = trainRepository.findByTrainNumber(trainNumber);
-		int actualTrainRunSectionIndex = train.getTrainRun().getActualTrainRunSectionIndex();
-		List<TrainRunSection> sections = trainRunSectionRepository.findByTrainRun(train.getTrainRun());
+
+		TrainRun trainRun = train.getTrainRun();
+
+		int actualTrainRunSectionIndex = trainRun.getActualTrainRunSectionIndex();
+		List<TrainRunSection> sections = trainRunSectionRepository.findByTrainRun(trainRun);
 		TrainRunSection trainRunSection = sections.get(actualTrainRunSectionIndex);
-		
+
+		// increase train run index
+		actualTrainRunSectionIndex++;
+		trainRun.setActualTrainRunSectionIndex(actualTrainRunSectionIndex);
+		trainRunRepository.save(trainRun);
+
 		// add waggons to entry track
 		Track entryTrack = trainRunSection.getNodeTo().getEntryTrack();
 		List<RailItemSequence> actualSequences = railItemSequenceRepository.findByTrack(entryTrack);
 		RailItemSequence sequence = train.getWaggonSequence();
-		
+
 		sequence.setTrack(entryTrack);
 		railItemSequenceRepository.save(sequence);
 
 		// add entry train sequence to entry track
 		actualSequences.add(sequence);
-
-		entryTrack.setRailItemSequences(actualSequences);
-		trackRepository.save(entryTrack);
 
 		return new ResponseEntity<String>("ARRIVED", HttpStatus.OK);
 	}
