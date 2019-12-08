@@ -19,10 +19,12 @@ import de.gravitex.trainmaster.dto.TrainRunSectionNodeDTO;
 import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
-import de.gravitex.trainmaster.entity.enumeration.TrainState;
 import de.gravitex.trainmaster.entity.trainrun.TrainRun;
 import de.gravitex.trainmaster.entity.trainrun.TrainRunSection;
 import de.gravitex.trainmaster.exception.TrainRunException;
+import de.gravitex.trainmaster.logic.TrainRunArrivalAction;
+import de.gravitex.trainmaster.logic.TrainRunDepartureAction;
+import de.gravitex.trainmaster.logic.TrainRunPrepareAction;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
@@ -64,28 +66,27 @@ public class TrainRunController implements ITrainRunController {
 	@PostMapping(ServerMappings.TrainRun.TRAIN_PREPARATION)
 	public ResponseEntity<String> trainPreparation(@RequestBody TrainRunDescriptor trainRunDescriptor) {
 
-		TrainRun trainRun = new TrainRun();
-		trainRunRepository.save(trainRun);
+		TrainRunPrepareAction trainRunPrepareAction = new TrainRunPrepareAction();
 
-		Train train = new Train();
-		train.setTrainState(TrainState.PREPARED);
-		train.setTrainNumber(trainRunDescriptor.getTrainNumber());
-		RailItemSequence sequence = railItemSequenceRepository
-				.findBySequenceIdentifier(trainRunDescriptor.getSequenceIdentifier());
-		train.setWaggonSequence(sequence);
-		train.setTrainRun(trainRun);
-		trainRepository.save(train);
+		trainRunPrepareAction.setSequence(
+				railItemSequenceRepository.findBySequenceIdentifier(trainRunDescriptor.getSequenceIdentifier()));
+
+		trainRunPrepareAction.setTrainRunDescriptor(trainRunDescriptor);
+		trainRunPrepareAction.execute();
+		
+		trainRunRepository.save(trainRunPrepareAction.getTrainRun());
+		trainRepository.save(trainRunPrepareAction.getTrain());
 
 		int index = 0;
 		for (TrainRunSectionNodeDTO dto : trainRunDescriptor.getStationInfoDTOs()) {
-			trackService.createTrainRunSection(trainRun, stationRepository.findByStationName(dto.getStationFrom()),
+			trackService.createTrainRunSection(trainRunPrepareAction.getTrainRun(),
+					stationRepository.findByStationName(dto.getStationFrom()),
 					stationRepository.findByStationName(dto.getStationTo()),
 					trackRepository.findByTrackNumber(dto.getEntryTrack()),
 					trackRepository.findByTrackNumber(dto.getExitTrack()), index,
 					trainRunDescriptor.getStationInfoDTOs().size());
 			index++;
 		}
-
 		return new ResponseEntity<String>("TRAIN_PREPARED", HttpStatus.OK);
 	}
 
@@ -93,10 +94,9 @@ public class TrainRunController implements ITrainRunController {
 	@RequestMapping(ServerMappings.TrainRun.TRAIN_DEAPRTURE)
 	public ResponseEntity<String> trainDepature(@RequestParam(value = "trainNumber") String trainNumber) {
 
-		Train train = trainRepository.findByTrainNumber(trainNumber);
-
-		// remove train waggon sequnce from track
-		train.getWaggonSequence().setTrack(null);
+		TrainRunDepartureAction trainRunDepartureAction = new TrainRunDepartureAction();
+		trainRunDepartureAction.setTrain(trainRepository.findByTrainNumber(trainNumber));
+		trainRunDepartureAction.execute();
 
 		return new ResponseEntity<String>("DEPARTED", HttpStatus.OK);
 	}
@@ -104,30 +104,15 @@ public class TrainRunController implements ITrainRunController {
 	@Transactional
 	@RequestMapping(ServerMappings.TrainRun.TRAIN_ARRIVAL)
 	public ResponseEntity<String> trainArrival(@RequestParam(value = "trainNumber") String trainNumber) {
-
+		
+		TrainRunArrivalAction trainRunArrivalAction = new TrainRunArrivalAction();
 		Train train = trainRepository.findByTrainNumber(trainNumber);
-
-		TrainRun trainRun = train.getTrainRun();
-
-		int actualTrainRunSectionIndex = trainRun.getActualTrainRunSectionIndex();
-		List<TrainRunSection> sections = trainRunSectionRepository.findByTrainRun(trainRun);
-		TrainRunSection trainRunSection = sections.get(actualTrainRunSectionIndex);
-
-		// increase train run index
-		actualTrainRunSectionIndex++;
-		trainRun.setActualTrainRunSectionIndex(actualTrainRunSectionIndex);
-		trainRunRepository.save(trainRun);
-
-		// add waggons to entry track
-		Track entryTrack = trainRunSection.getNodeTo().getEntryTrack();
-		List<RailItemSequence> actualSequences = railItemSequenceRepository.findByTrack(entryTrack);
-		RailItemSequence sequence = train.getWaggonSequence();
-
-		sequence.setTrack(entryTrack);
-		railItemSequenceRepository.save(sequence);
-
-		// add entry train sequence to entry track
-		actualSequences.add(sequence);
+		trainRunArrivalAction.setTrain(train);
+		trainRunArrivalAction.setSections(trainRunSectionRepository.findByTrainRun(train.getTrainRun()));
+		trainRunArrivalAction.execute();
+		
+		trainRunRepository.save(train.getTrainRun());
+		railItemSequenceRepository.save(train.getWaggonSequence());
 
 		return new ResponseEntity<String>("ARRIVED", HttpStatus.OK);
 	}

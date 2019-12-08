@@ -1,5 +1,5 @@
 package de.gravitex.trainmaster.logic;
 
-public abstract class TrainRunAction {
+public abstract class TrainRunAction extends GenericTrainAction {
 
 }
