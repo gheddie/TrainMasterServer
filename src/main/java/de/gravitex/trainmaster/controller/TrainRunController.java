@@ -1,7 +1,5 @@
 package de.gravitex.trainmaster.controller;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
 import de.gravitex.trainmaster.dto.TrainRunSectionNodeDTO;
-import de.gravitex.trainmaster.entity.RailItemSequence;
+import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Train;
+import de.gravitex.trainmaster.entity.trainrun.FinalTrainRunSection;
+import de.gravitex.trainmaster.entity.trainrun.InitialTrainRunSection;
+import de.gravitex.trainmaster.entity.trainrun.IntermediateTrainRunSection;
 import de.gravitex.trainmaster.entity.trainrun.TrainRun;
 import de.gravitex.trainmaster.entity.trainrun.TrainRunSection;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionArrivalNode;
+import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionDepartureNode;
 import de.gravitex.trainmaster.exception.TrainRunException;
 import de.gravitex.trainmaster.logic.TrainRunArrivalAction;
 import de.gravitex.trainmaster.logic.TrainRunDepartureAction;
@@ -30,37 +33,41 @@ import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
 import de.gravitex.trainmaster.repo.TrainRepository;
 import de.gravitex.trainmaster.repo.TrainRunRepository;
+import de.gravitex.trainmaster.repo.TrainRunSectionNodeRepository;
 import de.gravitex.trainmaster.repo.TrainRunSectionRepository;
 import de.gravitex.trainmaster.repo.WaggonRepository;
 import de.gravitex.trainmaster.request.TrainRunDescriptor;
-import de.gravitex.trainmaster.service.ITrackService;
+import de.gravitex.trainmaster.service.IRailService;
 
 @RestController
 public class TrainRunController implements ITrainRunController {
 
 	@Autowired
-	private TrainRunRepository trainRunRepository;
+	TrainRunRepository trainRunRepository;
 
 	@Autowired
-	private TrainRepository trainRepository;
+	TrainRepository trainRepository;
 
 	@Autowired
-	private TrackRepository trackRepository;
+	TrackRepository trackRepository;
 
 	@Autowired
-	private TrainRunSectionRepository trainRunSectionRepository;
+	TrainRunSectionRepository trainRunSectionRepository;
 
 	@Autowired
-	private StationRepository stationRepository;
+	StationRepository stationRepository;
 
 	@Autowired
-	private RailItemSequenceRepository railItemSequenceRepository;
+	RailItemSequenceRepository railItemSequenceRepository;
 
 	@Autowired
 	WaggonRepository waggonRepository;
+	
+	@Autowired
+	TrainRunSectionNodeRepository trainRunSectionNodeRepository;
 
 	@Autowired
-	ITrackService trackService;
+	IRailService trackService;
 
 	@Transactional(rollbackOn = TrainRunException.class)
 	@PostMapping(ServerMappings.TrainRun.TRAIN_PREPARATION)
@@ -79,7 +86,7 @@ public class TrainRunController implements ITrainRunController {
 
 		int index = 0;
 		for (TrainRunSectionNodeDTO dto : trainRunDescriptor.getStationInfoDTOs()) {
-			trackService.createTrainRunSection(trainRunPrepareAction.getTrainRun(),
+			createTrainRunSection(trainRunPrepareAction.getTrainRun(),
 					stationRepository.findByStationName(dto.getStationFrom()),
 					stationRepository.findByStationName(dto.getStationTo()),
 					trackRepository.findByTrackNumber(dto.getEntryTrack()),
@@ -88,6 +95,39 @@ public class TrainRunController implements ITrainRunController {
 			index++;
 		}
 		return new ResponseEntity<String>("TRAIN_PREPARED", HttpStatus.OK);
+	}
+	
+	private void createTrainRunSection(TrainRun trainRun, Station stationFrom, Station stationTo, Track entryTrack,
+			Track exitTrack, int sectionIndex, int totalStationCount) {
+		
+		TrainRunSectionDepartureNode trainRunSectionNodeFrom = new TrainRunSectionDepartureNode();
+		trainRunSectionNodeFrom.setStationFrom(stationFrom);
+		trainRunSectionNodeFrom.setExitTrack(exitTrack);
+		trainRunSectionNodeRepository.save(trainRunSectionNodeFrom);
+
+		TrainRunSectionArrivalNode trainRunSectionNodeTo = new TrainRunSectionArrivalNode();
+		trainRunSectionNodeTo.setStationTo(stationTo);
+		trainRunSectionNodeTo.setEntryTrack(entryTrack);
+		trainRunSectionNodeRepository.save(trainRunSectionNodeTo);
+
+		TrainRunSection trainRunSection = null;
+
+		if (sectionIndex == 0) {
+			trainRunSection = new InitialTrainRunSection();
+		} else if (sectionIndex == totalStationCount) {
+			trainRunSection = new IntermediateTrainRunSection();
+		} else {
+			trainRunSection = new FinalTrainRunSection();
+		}
+
+		trainRunSection.setNodeFrom(trainRunSectionNodeFrom);
+		trainRunSection.setNodeTo(trainRunSectionNodeTo);
+		
+		trainRunSection.setTrainRun(trainRun);
+		trainRunSection.setSectionIndex(sectionIndex);
+
+		trainRunSectionRepository.save(trainRunSection);
+		
 	}
 
 	@Transactional

@@ -31,7 +31,7 @@ import de.gravitex.trainmaster.repo.TrainRunRepository;
 import de.gravitex.trainmaster.repo.TrainRunSectionRepository;
 
 @Component
-public class TrackService implements ITrackService {
+public class RailService implements IRailService {
 
 	@Autowired
 	TrainRunRepository trainRunRepository;
@@ -102,39 +102,5 @@ public class TrackService implements ITrackService {
 		}
 		
 		return result;
-	}
-
-	@Override
-	public void createTrainRunSection(TrainRun trainRun, Station stationFrom, Station stationTo, Track entryTrack,
-			Track exitTrack, int sectionIndex, int totalStationCount) {
-		
-		TrainRunSectionDepartureNode trainRunSectionNodeFrom = new TrainRunSectionDepartureNode();
-		trainRunSectionNodeFrom.setStationFrom(stationFrom);
-		trainRunSectionNodeFrom.setExitTrack(exitTrack);
-		trainRunSectionNodeRepository.save(trainRunSectionNodeFrom);
-
-		TrainRunSectionArrivalNode trainRunSectionNodeTo = new TrainRunSectionArrivalNode();
-		trainRunSectionNodeTo.setStationTo(stationTo);
-		trainRunSectionNodeTo.setEntryTrack(entryTrack);
-		trainRunSectionNodeRepository.save(trainRunSectionNodeTo);
-
-		TrainRunSection trainRunSection = null;
-
-		if (sectionIndex == 0) {
-			trainRunSection = new InitialTrainRunSection();
-		} else if (sectionIndex == totalStationCount) {
-			trainRunSection = new IntermediateTrainRunSection();
-		} else {
-			trainRunSection = new FinalTrainRunSection();
-		}
-
-		trainRunSection.setNodeFrom(trainRunSectionNodeFrom);
-		trainRunSection.setNodeTo(trainRunSectionNodeTo);
-		
-		trainRunSection.setTrainRun(trainRun);
-		trainRunSection.setSectionIndex(sectionIndex);
-
-		trainRunSectionRepository.save(trainRunSection);
-		
 	}
 }

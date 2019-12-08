@@ -29,19 +29,19 @@ import de.gravitex.trainmaster.repo.WaggonRepository;
 public class TestDataController {
 
 	@Autowired
-	private StationRepository stationRepository;
+	StationRepository stationRepository;
 
 	@Autowired
-	private TrackRepository trackRepository;
+	TrackRepository trackRepository;
 
 	@Autowired
-	private RailItemSequenceRepository railItemSequenceRepository;
+	RailItemSequenceRepository railItemSequenceRepository;
 
 	@Autowired
-	private RailItemSequenceMembershipRepository railItemSequenceMembershipRepository;
+	RailItemSequenceMembershipRepository railItemSequenceMembershipRepository;
 
 	@Autowired
-	private RailItemRepository railItemRepository;
+	RailItemRepository railItemRepository;
 
 	@Autowired
 	WaggonRepository waggonRepository;
