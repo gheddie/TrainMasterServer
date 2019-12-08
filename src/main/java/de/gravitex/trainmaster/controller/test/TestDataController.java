@@ -24,7 +24,6 @@ import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
 import de.gravitex.trainmaster.repo.WaggonRepository;
-import de.gravitex.trainmaster.util.TablePrinter;
 
 @RestController
 public class TestDataController {
