@@ -23,7 +23,6 @@ public class RailItemSequence extends BaseEntity {
 	@NotBlank
 	private String sequenceIdentifier;
 	
-	// @ForeignKey(name = "rail_item_sequence_holder_id")
 	@OneToOne
 	private Track track;
 	

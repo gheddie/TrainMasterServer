@@ -9,7 +9,7 @@ public interface ITrainRunController {
 
 	public ResponseEntity<StationsAndTracksAndWaggonsDTO> stationData();
 	
-	public ResponseEntity<String> prepareTrain(TrainRunDescriptor trainRunDescriptor);
+	public ResponseEntity<String> trainPreparation(TrainRunDescriptor trainRunDescriptor);
 	
-	public ResponseEntity<String> departTrain(String trainNumber);
+	public ResponseEntity<String> trainDepature(String trainNumber);
 }

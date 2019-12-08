@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,17 +13,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.util.Assert;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dto.TrainRunSectionNodeDTO;
-import de.gravitex.trainmaster.dto.StationsAndTracksAndWaggonsDTO;
 import de.gravitex.trainmaster.request.TrainRunDescriptor;
 import de.gravitex.trainmaster.util.TrainRunTestUtil;
 
@@ -62,7 +56,7 @@ public class TrainRunControllerTest {
 	public void testStationAndTracksWithTestData() throws Exception {
 
 		// create test data
-		mockMvc.perform(get(ServerMappings.TestData.CREATE));
+		mockMvc.perform(get(ServerMappings.TestData.CREATION));
 
 		// S1
 		TrainRunTestUtil.assertTrackSequence("S1", "track1Station1",
@@ -99,29 +93,24 @@ public class TrainRunControllerTest {
 		trainRunDescriptor.setStationInfoDTOs(stationInfoDTOs);
 
 		// prepare train
-		mockMvc.perform(MockMvcRequestBuilders.post(ServerMappings.TrainRun.PREPARE_TRAIN).content(new ObjectMapper().writeValueAsString(trainRunDescriptor))
+		mockMvc.perform(MockMvcRequestBuilders.post(ServerMappings.TrainRun.TRAIN_PREPARATION).content(new ObjectMapper().writeValueAsString(trainRunDescriptor))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(content().string(containsString("TRAIN_PREPARED")));
 
-		// check something dumb
-		mockMvc.perform(get(ServerMappings.TrainRun.DELETE_ME)).andExpect(content().string(containsString("DELETED")));
-
-		// check we have a train
-
 		// depart train from 'S1' --> 'seqTrack1Station1' must have left track 'track1Station1'
-		mockMvc.perform(get(ServerMappings.TrainRun.DEAPRT_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("DEPARTED")));
+		mockMvc.perform(get(ServerMappings.TrainRun.TRAIN_DEAPRTURE).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("DEPARTED")));
 		TrainRunTestUtil.assertTrackSequence("S1", "track1Station1", "[track1Station1]::seqLocos{[L1]}", mockMvc);
 		
 		// arrive train at 'S2' --> 'seqTrack1Station1' must appear on track 'track1Station2' 
-		mockMvc.perform(get(ServerMappings.TrainRun.ARRIVE_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("ARRIVED")));
+		mockMvc.perform(get(ServerMappings.TrainRun.TRAIN_ARRIVAL).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("ARRIVED")));
 		TrainRunTestUtil.assertTrackSequence("S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}seqTrack1Station1{[123][234]}", mockMvc);
 		
 		// depart train from 'S2' --> 'seqTrack1Station1' must have left track 'track1Station2'
-		mockMvc.perform(get(ServerMappings.TrainRun.DEAPRT_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("DEPARTED")));
+		mockMvc.perform(get(ServerMappings.TrainRun.TRAIN_DEAPRTURE).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("DEPARTED")));
 		TrainRunTestUtil.assertTrackSequence("S2", "track1Station2", "[track1Station2]::seqTrack1Station2{[456][567]}", mockMvc);
 		
 		// arrive train at 'S3' --> 'seqTrack1Station1' must appear on track 'track1Station3'
-		mockMvc.perform(get(ServerMappings.TrainRun.ARRIVE_TRAIN).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("ARRIVED")));
+		mockMvc.perform(get(ServerMappings.TrainRun.TRAIN_ARRIVAL).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("ARRIVED")));
 		TrainRunTestUtil.assertTrackSequence("S3", "track1Station3", "[track1Station3]::seqTrack1Station1{[123][234]}", mockMvc);
 	}
 }

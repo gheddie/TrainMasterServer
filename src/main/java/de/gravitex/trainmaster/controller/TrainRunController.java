@@ -61,8 +61,8 @@ public class TrainRunController implements ITrainRunController {
 	ITrackService trackService;
 
 	@Transactional(rollbackOn = TrainRunException.class)
-	@PostMapping(ServerMappings.TrainRun.PREPARE_TRAIN)
-	public ResponseEntity<String> prepareTrain(@RequestBody TrainRunDescriptor trainRunDescriptor) {
+	@PostMapping(ServerMappings.TrainRun.TRAIN_PREPARATION)
+	public ResponseEntity<String> trainPreparation(@RequestBody TrainRunDescriptor trainRunDescriptor) {
 
 		TrainRun trainRun = new TrainRun();
 		trainRunRepository.save(trainRun);
@@ -90,15 +90,8 @@ public class TrainRunController implements ITrainRunController {
 	}
 
 	@Transactional
-	@RequestMapping(ServerMappings.TrainRun.DELETE_ME)
-	public ResponseEntity<String> deleteMe() {
-
-		return new ResponseEntity<String>("DELETED", HttpStatus.OK);
-	}
-
-	@Transactional
-	@RequestMapping(ServerMappings.TrainRun.DEAPRT_TRAIN)
-	public ResponseEntity<String> departTrain(@RequestParam(value = "trainNumber") String trainNumber) {
+	@RequestMapping(ServerMappings.TrainRun.TRAIN_DEAPRTURE)
+	public ResponseEntity<String> trainDepature(@RequestParam(value = "trainNumber") String trainNumber) {
 
 		Train train = trainRepository.findByTrainNumber(trainNumber);
 
@@ -109,8 +102,8 @@ public class TrainRunController implements ITrainRunController {
 	}
 
 	@Transactional
-	@RequestMapping(ServerMappings.TrainRun.ARRIVE_TRAIN)
-	public ResponseEntity<String> arriveTrain(@RequestParam(value = "trainNumber") String trainNumber) {
+	@RequestMapping(ServerMappings.TrainRun.TRAIN_ARRIVAL)
+	public ResponseEntity<String> trainArrival(@RequestParam(value = "trainNumber") String trainNumber) {
 
 		Train train = trainRepository.findByTrainNumber(trainNumber);
 

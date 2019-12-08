@@ -17,20 +17,12 @@ import de.gravitex.trainmaster.entity.RailItemSequence;
 import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.Track;
-import de.gravitex.trainmaster.entity.Train;
 import de.gravitex.trainmaster.entity.Waggon;
-import de.gravitex.trainmaster.entity.trainrun.TrainRun;
-import de.gravitex.trainmaster.entity.trainrun.TrainRunSection;
-import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionNode;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
-import de.gravitex.trainmaster.repo.TrainRunSectionNodeRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
-import de.gravitex.trainmaster.repo.TrainRepository;
-import de.gravitex.trainmaster.repo.TrainRunRepository;
-import de.gravitex.trainmaster.repo.TrainRunSectionRepository;
 import de.gravitex.trainmaster.repo.WaggonRepository;
 import de.gravitex.trainmaster.util.TablePrinter;
 
@@ -53,23 +45,11 @@ public class TestDataController {
 	private RailItemRepository railItemRepository;
 
 	@Autowired
-	private TrainRepository trainRepository;
-
-	@Autowired
-	private TrainRunRepository trainRunRepository;
-
-	@Autowired
-	private TrainRunSectionRepository trainRunSectionRepository;
-
-	@Autowired
-	private TrainRunSectionNodeRepository stationInfoRepository;
-
-	@Autowired
 	WaggonRepository waggonRepository;
 
 	@Transactional
-	@RequestMapping(ServerMappings.TestData.CREATE)
-	public void create() {
+	@RequestMapping(ServerMappings.TestData.CREATION)
+	public void creation() {
 
 		Station station1 = new Station();
 		station1.setStationName("S1");
@@ -157,27 +137,6 @@ public class TestDataController {
 		putRailItemToTrack(waggon567, track1Station2, seqTrack1Station2, 1);
 
 		renderTracksAndWaggons("BEFORE");
-
-		// create train with a train run Station 1 -> Station 2
-		/*
-		StationInfo stationInfo1 = new StationInfo(station1, null, track1Station1);
-		stationInfoRepository.save(stationInfo1);
-		StationInfo stationInfo2 = new StationInfo(station2, track1Station2, null);
-		stationInfoRepository.save(stationInfo2);
-		TrainRunSection sec1 = new TrainRunSection(stationInfo1, stationInfo2);
-		trainRunSectionRepository.save(sec1);
-		Train train = new Train();
-		train.setTrainNumber("ABC-DEF-GHI");
-		TrainRun trainRun = new TrainRun();
-		trainRunRepository.save(trainRun);
-		train.setTrainRun(trainRun);
-		trainRun.getTrainRunSections().add(sec1);
-		trainRepository.save(train);
-		*/
-		
-		// ---
-		
-		new TablePrinter().print(trackRepository.findAll());
 	}
 
 	private void putRailItemToTrack(RailItem railItem, Track track, RailItemSequence railItemSequence,
