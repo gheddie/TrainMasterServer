@@ -1,4 +1,4 @@
-package de.gravitex.trainmaster.logic;
+package de.gravitex.trainmaster.logic.base;
 
 public abstract class GenericTrainAction {
 

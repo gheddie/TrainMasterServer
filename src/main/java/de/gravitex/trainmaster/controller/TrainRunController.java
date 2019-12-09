@@ -25,6 +25,7 @@ import de.gravitex.trainmaster.entity.trainrun.TrainRunSection;
 import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionArrivalNode;
 import de.gravitex.trainmaster.entity.trainrun.TrainRunSectionDepartureNode;
 import de.gravitex.trainmaster.exception.TrainRunException;
+import de.gravitex.trainmaster.logic.CreateTrainRunSectionAction;
 import de.gravitex.trainmaster.logic.TrainRunArrivalAction;
 import de.gravitex.trainmaster.logic.TrainRunDepartureAction;
 import de.gravitex.trainmaster.logic.TrainRunPrepareAction;
@@ -86,50 +87,32 @@ public class TrainRunController implements ITrainRunController {
 
 		int index = 0;
 		for (TrainRunSectionNodeDTO dto : trainRunDescriptor.getStationInfoDTOs()) {
-			createTrainRunSection(trainRunPrepareAction.getTrainRun(),
-					stationRepository.findByStationName(dto.getStationFrom()),
-					stationRepository.findByStationName(dto.getStationTo()),
-					trackRepository.findByTrackNumber(dto.getEntryTrack()),
-					trackRepository.findByTrackNumber(dto.getExitTrack()), index,
-					trainRunDescriptor.getStationInfoDTOs().size());
+			
+			Station stationFrom = stationRepository.findByStationName(dto.getStationFrom());
+			Station stationTo = stationRepository.findByStationName(dto.getStationTo());
+			Track entryTrack = trackRepository.findByTrackNumber(dto.getEntryTrack());
+			Track exitTrack = trackRepository.findByTrackNumber(dto.getExitTrack());
+			
+			CreateTrainRunSectionAction createTrainRunSectionAction = new CreateTrainRunSectionAction();
+			createTrainRunSectionAction.setTrainRun(trainRunPrepareAction.getTrainRun());
+			createTrainRunSectionAction.setTrainRunDescriptor(trainRunDescriptor);
+			createTrainRunSectionAction.setStationFrom(stationFrom);
+			createTrainRunSectionAction.setStationTo(stationTo);
+			createTrainRunSectionAction.setEntryTrack(entryTrack);
+			createTrainRunSectionAction.setExitTrack(exitTrack);
+			createTrainRunSectionAction.setIndex(index);
+			createTrainRunSectionAction.execute();
+			
+			trainRunSectionNodeRepository.save(createTrainRunSectionAction.getTrainRunSectionNodeFrom());
+			trainRunSectionNodeRepository.save(createTrainRunSectionAction.getTrainRunSectionNodeTo());
+			trainRunSectionRepository.save(createTrainRunSectionAction.getTrainRunSection());
+			
 			index++;
 		}
+		
 		return new ResponseEntity<String>("TRAIN_PREPARED", HttpStatus.OK);
 	}
 	
-	private void createTrainRunSection(TrainRun trainRun, Station stationFrom, Station stationTo, Track entryTrack,
-			Track exitTrack, int sectionIndex, int totalStationCount) {
-		
-		TrainRunSectionDepartureNode trainRunSectionNodeFrom = new TrainRunSectionDepartureNode();
-		trainRunSectionNodeFrom.setStationFrom(stationFrom);
-		trainRunSectionNodeFrom.setExitTrack(exitTrack);
-		trainRunSectionNodeRepository.save(trainRunSectionNodeFrom);
-
-		TrainRunSectionArrivalNode trainRunSectionNodeTo = new TrainRunSectionArrivalNode();
-		trainRunSectionNodeTo.setStationTo(stationTo);
-		trainRunSectionNodeTo.setEntryTrack(entryTrack);
-		trainRunSectionNodeRepository.save(trainRunSectionNodeTo);
-
-		TrainRunSection trainRunSection = null;
-
-		if (sectionIndex == 0) {
-			trainRunSection = new InitialTrainRunSection();
-		} else if (sectionIndex == totalStationCount) {
-			trainRunSection = new IntermediateTrainRunSection();
-		} else {
-			trainRunSection = new FinalTrainRunSection();
-		}
-
-		trainRunSection.setNodeFrom(trainRunSectionNodeFrom);
-		trainRunSection.setNodeTo(trainRunSectionNodeTo);
-		
-		trainRunSection.setTrainRun(trainRun);
-		trainRunSection.setSectionIndex(sectionIndex);
-
-		trainRunSectionRepository.save(trainRunSection);
-		
-	}
-
 	@Transactional
 	@RequestMapping(ServerMappings.TrainRun.TRAIN_DEAPRTURE)
 	public ResponseEntity<String> trainDepature(@RequestParam(value = "trainNumber") String trainNumber) {
