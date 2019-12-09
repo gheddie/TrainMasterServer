@@ -4,8 +4,6 @@ public class ServerMappings {
 	
 	public class TestData {
 
-		public static final String CREATION = "/creation";
-		
 		public static final String CHECK = "/check";
 	}
 	
