@@ -18,11 +18,13 @@ import de.gravitex.trainmaster.entity.RailItemSequenceMembership;
 import de.gravitex.trainmaster.entity.Station;
 import de.gravitex.trainmaster.entity.Track;
 import de.gravitex.trainmaster.entity.Waggon;
+import de.gravitex.trainmaster.entity.trainrun.TrainRun;
 import de.gravitex.trainmaster.repo.RailItemRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceMembershipRepository;
 import de.gravitex.trainmaster.repo.RailItemSequenceRepository;
 import de.gravitex.trainmaster.repo.StationRepository;
 import de.gravitex.trainmaster.repo.TrackRepository;
+import de.gravitex.trainmaster.repo.TrainRunRepository;
 import de.gravitex.trainmaster.repo.WaggonRepository;
 
 @RestController
@@ -45,6 +47,9 @@ public class TestDataController {
 
 	@Autowired
 	WaggonRepository waggonRepository;
+	
+	@Autowired
+	TrainRunRepository trainRunRepository;
 
 	@Transactional
 	@RequestMapping(ServerMappings.TestData.CREATION)
@@ -163,5 +168,14 @@ public class TestDataController {
 			simpleTrackRenderer.putTrackWaggons(t, railItems);
 		}
 		return simpleTrackRenderer.render();
+	}
+	
+	@Transactional
+	@RequestMapping(ServerMappings.TestData.CHECK)
+	public void check() {
+		
+		List<Waggon> all = waggonRepository.findAll();
+		List<TrainRun> tr = trainRunRepository.findAll();
+		int werner = 5;
 	}
 }

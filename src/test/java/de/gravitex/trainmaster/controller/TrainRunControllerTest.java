@@ -19,15 +19,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.gravitex.trainmaster.config.ServerMappings;
 import de.gravitex.trainmaster.dto.TrainRunSectionNodeDTO;
+import de.gravitex.trainmaster.repo.TrainRepository;
 import de.gravitex.trainmaster.request.TrainRunDescriptor;
 import de.gravitex.trainmaster.util.TrainRunTestUtil;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+// @DataJpaTest
 public class TrainRunControllerTest {
 
 	@Autowired
-	private MockMvc mockMvc;
+	MockMvc mockMvc;
+	
+	@Autowired
+	TrainRepository trainRepository;
 
 	/**
 	 * 
@@ -112,5 +117,13 @@ public class TrainRunControllerTest {
 		// arrive train at 'S3' --> 'seqTrack1Station1' must appear on track 'track1Station3'
 		mockMvc.perform(get(ServerMappings.TrainRun.TRAIN_ARRIVAL).param("trainNumber", "TRAIN_TEST_NUMBER")).andExpect(content().string(containsString("ARRIVED")));
 		TrainRunTestUtil.assertTrackSequence("S3", "track1Station3", "[track1Station3]::seqTrack1Station1{[123][234]}", mockMvc);
+	}
+	
+	@Test
+	public void testTrainDepartureWithoutBrakeChecks() throws Exception {
+		
+		System.out.println("TR : " + trainRepository);
+		
+		mockMvc.perform(get(ServerMappings.TestData.CHECK));
 	}
 }
